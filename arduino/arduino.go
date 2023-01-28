@@ -13,7 +13,7 @@ type Arduino struct {
 }
 
 func (a Arduino) SendCommand(command Command) error {
-	_, err := a.Port.Write(make([]byte, command))
+	_, err := a.Port.Write([]byte(command))
 	return err
 }
 
