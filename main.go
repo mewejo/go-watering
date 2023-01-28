@@ -12,22 +12,22 @@ func main() {
 
 	for {
 		a.SendCommand(arduino.WATER_1_ON)
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 500)
 		a.SendCommand(arduino.WATER_1_OFF)
 		time.Sleep(time.Second)
 
 		a.SendCommand(arduino.WATER_2_ON)
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 500)
 		a.SendCommand(arduino.WATER_2_OFF)
 		time.Sleep(time.Second)
 
 		a.SendCommand(arduino.WATER_3_ON)
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 500)
 		a.SendCommand(arduino.WATER_3_OFF)
 		time.Sleep(time.Second)
 
 		a.SendCommand(arduino.WATER_4_ON)
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 500)
 		a.SendCommand(arduino.WATER_4_OFF)
 		time.Sleep(time.Second)
 
