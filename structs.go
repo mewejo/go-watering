@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"time"
+
+	"github.com/mewejo/go-watering/arduino"
+)
 
 type MoistureSensor struct {
 	Id   int8
@@ -16,4 +20,5 @@ type MoistureReading struct {
 type Zone struct {
 	Name            string
 	MoistureSensors []MoistureSensor
+	WaterOutlets    []arduino.WaterOutlet
 }
