@@ -51,7 +51,7 @@ func findArduinoPort() (string, error) {
 	}
 
 	if len(ports) == 0 {
-		log.Fatal("No serial ports found!")
+		log.Fatal("no serial ports found!")
 	}
 
 	for _, port := range ports {
@@ -62,7 +62,7 @@ func findArduinoPort() (string, error) {
 		return port, nil
 	}
 
-	return "", errors.New("No devices found which look like an Arduino")
+	return "", errors.New("no devices found which look like an Arduino")
 }
 
 func GetArduino() Arduino {
@@ -70,7 +70,7 @@ func GetArduino() Arduino {
 	arduinoPort, err := findArduinoPort()
 
 	if err != nil {
-		log.Fatal("Could not find Arduino port! " + err.Error())
+		log.Fatal("could not find Arduino port! " + err.Error())
 	}
 
 	mode := &serial.Mode{
@@ -80,7 +80,7 @@ func GetArduino() Arduino {
 	port, err := serial.Open(arduinoPort, mode)
 
 	if err != nil {
-		log.Fatal("Could not open Arduino port! " + err.Error())
+		log.Fatal("could not open Arduino port! " + err.Error())
 	}
 
 	arduino := Arduino{

@@ -20,9 +20,9 @@ func (o WaterOutlet) OnCommand() (Command, error) {
 		return WATER_3_ON, nil
 	} else if o == WATER_OUTLET_4 {
 		return WATER_4_ON, nil
-	} else {
-		return WATER_OFF, errors.New("Invalid outlet")
 	}
+
+	return WATER_OFF, errors.New("invalid outlet")
 }
 
 func (o WaterOutlet) OffCommand() (Command, error) {
@@ -34,7 +34,7 @@ func (o WaterOutlet) OffCommand() (Command, error) {
 		return WATER_3_OFF, nil
 	} else if o == WATER_OUTLET_4 {
 		return WATER_4_OFF, nil
-	} else {
-		return WATER_OFF, errors.New("Invalid outlet")
 	}
+
+	return WATER_OFF, errors.New("invalid outlet")
 }
