@@ -8,7 +8,8 @@ import (
 type Zone struct {
 	Id              string // This will be user defined, used for API calls
 	Name            string
-	MoistureSensors []arduino.MoistureSensor
-	MoisureReadings []arduino.MoistureReading
 	TargetMoisture  world.MoistureLevel
+	MoistureSensors []arduino.MoistureSensor
+	WaterOutlets    []arduino.WaterOutlet
+	MoisureReadings []arduino.MoistureReading
 }

@@ -4,9 +4,12 @@ import (
 	"time"
 
 	"github.com/mewejo/go-watering/arduino"
+	"github.com/mewejo/go-watering/config"
 )
 
 func main() {
+
+	app := config.GetApplication()
 
 	a := arduino.GetArduino()
 
