@@ -1,10 +1,14 @@
 package arduino
 
-import "time"
+import (
+	"time"
+
+	"github.com/mewejo/go-watering/world"
+)
 
 type MoistureReading struct {
-	Time       time.Time
-	Raw        int16
-	Percentage int8
-	Sensor     MoistureSensor
+	Time     time.Time
+	Raw      int16
+	Original world.MoistureLevel
+	Sensor   MoistureSensor
 }
