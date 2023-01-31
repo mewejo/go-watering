@@ -54,6 +54,13 @@ func GetApplication() Application {
 					arduino.WATER_OUTLET_3,
 				},
 			},
+			{
+				Id:   "patio",
+				Name: "Patio",
+				WaterOutlets: []arduino.WaterOutlet{
+					arduino.WATER_OUTLET_4,
+				},
+			},
 		},
 	}
 

@@ -77,6 +77,10 @@ func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
 			select {
 			case <-ticker.C:
 				for _, zone := range app.Zones {
+					if len(zone.MoistureSensors) < 1 {
+						continue
+					}
+
 					shouldNotBeWatering, err := zone.ShouldStopWatering()
 
 					if err != nil {
