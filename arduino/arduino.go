@@ -23,14 +23,11 @@ func (a Arduino) ReadData(buffer []byte) (int, error) {
 	return a.Port.Read(buffer)
 }
 
-func (a Arduino) ReadLines() []string {
+func (a Arduino) ReadLine() string {
 	buff := make([]byte, 100)
 	data := ""
-	lines := []string{}
 
 	for {
-		fmt.Println(lines)
-
 		n, err := a.ReadData(buff)
 
 		if err != nil {
@@ -44,8 +41,25 @@ func (a Arduino) ReadLines() []string {
 		data += string(buff[:n])
 
 		if strings.Contains(data, "\n") {
-			lines = append(lines, data)
-			data = ""
+			break
+		}
+	}
+
+	return data
+}
+
+func (a Arduino) ReadLines(until string) []string {
+	lines := []string{}
+
+	for {
+		fmt.Println(lines)
+
+		line := a.ReadLine()
+
+		lines = append(lines, line)
+
+		if line == until {
+			break
 		}
 	}
 
@@ -65,7 +79,7 @@ func (a Arduino) GetReadings() ([]MoistureReading, error) {
 
 	fmt.Println("About to read lines")
 
-	for _, line := range a.ReadLines() {
+	for _, line := range a.ReadLines("READINGS_END") {
 		reading, err := MakeMoistureReadingFromString(line)
 
 		if err != nil {
