@@ -89,6 +89,8 @@ func (a Arduino) GetReadings() ([]MoistureReading, error) {
 	fmt.Println("About to read lines")
 
 	for _, line := range a.ReadLines("READINGS_END") {
+		line = strings.TrimSuffix(line, "\n")
+		line = strings.TrimSuffix(line, "\r")
 		reading, err := MakeMoistureReadingFromString(line)
 
 		if err != nil {
