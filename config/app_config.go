@@ -6,12 +6,12 @@ import (
 )
 
 type Application struct {
-	Zones []Zone
+	Zones *[]Zone
 }
 
 func GetApplication() *Application {
 	a := Application{
-		Zones: []Zone{
+		Zones: &[]Zone{
 			{
 				Id:   "zone-1",
 				Name: "Zone 1",
