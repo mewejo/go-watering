@@ -3,9 +3,16 @@ package api
 import (
 	"log"
 	"net/http"
+
+	"github.com/mewejo/go-watering/config"
 )
 
-func StartApi() {
-	http.HandleFunc("/api/", handler)
+func StartApi(app *config.Application) {
+
+	zoneController := zoneController{
+		app: app,
+	}
+
+	http.HandleFunc("/api/zones/", zoneController.handle)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -33,7 +33,7 @@ func main() {
 
 	fmt.Println("Starting API...")
 
-	api.StartApi()
+	api.StartApi(&app)
 }
 
 func setupCloseHandler(ard arduino.Arduino) {
