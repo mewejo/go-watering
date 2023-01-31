@@ -21,8 +21,16 @@ func main() {
 
 	fmt.Println("The Arduino is ready!")
 
+	defer func() {
+		fmt.Println("Turning water off")
+		ard.SendCommand(arduino.WATER_OFF)
+	}()
+
 	go maintainMoistureLevels(ard, &app)
 	go readMoistureLevels(ard, &app)
+
+	for {
+	}
 }
 
 func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
