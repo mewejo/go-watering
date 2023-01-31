@@ -59,7 +59,7 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 				readings, err := ard.GetReadings()
 
 				if err != nil {
-					log.Fatal("Could not get readings from Arduino")
+					log.Fatal("Could not get readings from Arduino: " + err.Error())
 				}
 
 				fmt.Println("Got moisture readings")
