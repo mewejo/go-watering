@@ -72,8 +72,6 @@ func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
 		for {
 			select {
 			case <-ticker.C:
-				fmt.Println("maintaining moisture levels")
-
 				for _, zone := range app.Zones {
 					requiresWatering, err := zone.RequiresWatering()
 
@@ -101,15 +99,11 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 		for {
 			select {
 			case <-ticker.C:
-				fmt.Println("Asking for moisture readings")
-
 				readings, err := ard.GetReadings()
 
 				if err != nil {
 					log.Fatal("Could not get readings from Arduino: " + err.Error())
 				}
-
-				fmt.Println("Got moisture readings")
 
 				processMoistureReadings(app, readings)
 			case <-quit:
