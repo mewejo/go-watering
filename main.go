@@ -80,7 +80,7 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 }
 
 func processMoistureReadings(app *config.Application, readings []arduino.MoistureReading) {
-	for _, zone := range app.Zones {
+	for _, zone := range *app.Zones {
 		for _, sensor := range zone.MoistureSensors {
 			for _, reading := range readings {
 				if sensor != reading.Sensor {
