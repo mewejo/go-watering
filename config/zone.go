@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
@@ -61,6 +62,8 @@ func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 func (z *Zone) RecordMoistureReading(r arduino.MoistureReading) {
 	z.MoisureReadings = append(z.MoisureReadings, r)
 	limitMoistureReadings(&z.MoisureReadings, 100)
+
+	fmt.Sprintf("Got moisture reading of %v for sensor %v", r.Original.Percentage, r.Sensor)
 }
 
 func limitMoistureReadings(s *[]arduino.MoistureReading, length int) {
