@@ -73,6 +73,8 @@ func (a Arduino) GetReadings() ([]MoistureReading, error) {
 		fmt.Printf("%v", string(buff[:n]))
 	}
 
+	fmt.Println("do we get here?")
+
 	readings := []MoistureReading{}
 
 	fmt.Println("About to read lines")
