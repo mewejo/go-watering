@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/mewejo/go-watering/config"
 	"github.com/mewejo/go-watering/world"
@@ -13,9 +14,21 @@ type zoneController struct {
 }
 
 func (c zoneController) handle(w http.ResponseWriter, r *http.Request) {
-	c.app.Zones[0].TargetMoisture = world.MoistureLevel{
-		Percentage: 0,
+	percentage, err := strconv.Atoi(r.URL.Query().Get("target"))
+
+	if err != nil {
+		fmt.Fprintf(w, "Bad percentage!")
 	}
 
-	fmt.Fprintf(w, "Hi there, from controller I love %s!", r.URL.Path[1:])
+	zoneIndex, err := strconv.Atoi(r.URL.Query().Get("zone"))
+
+	if err != nil {
+		fmt.Fprintf(w, "Bad percentage!")
+	}
+
+	c.app.Zones[zoneIndex].TargetMoisture = world.MoistureLevel{
+		Percentage: uint(percentage),
+	}
+
+	fmt.Fprintf(w, "Set zone %v to %v pc", zoneIndex, percentage)
 }
