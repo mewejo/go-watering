@@ -1,19 +1,23 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/mewejo/go-watering/arduino"
+	"github.com/mewejo/go-watering/config"
 )
 
 func main() {
 
-	//app := config.GetApplication()
+	app := config.GetApplication()
 
 	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
 	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
 
 	a := arduino.GetArduino()
+
+	readMoistureLevels(a, app)
 
 	for {
 		a.SendCommand(arduino.WATER_1_ON)
@@ -37,5 +41,45 @@ func main() {
 		time.Sleep(time.Second)
 
 		time.Sleep(time.Second * 2)
+	}
+}
+
+func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
+	ticker := time.NewTicker(5 * time.Second)
+
+	quit := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				readings, err := ard.GetReadings()
+
+				if err != nil {
+					log.Fatal("Could not get readings from Arduino")
+				}
+
+				processMoistureReadings(app, readings)
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func processMoistureReadings(app *config.Application, readings []arduino.MoistureReading) {
+	for _, zone := range app.Zones {
+		for _, sensor := range zone.MoistureSensors {
+			for _, reading := range readings {
+				if sensor != reading.Sensor {
+					continue
+				}
+
+				// This 3 level nesting feels nasty
+
+				zone.RecordMoistureReading(reading)
+			}
+		}
 	}
 }
