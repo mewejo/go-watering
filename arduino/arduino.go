@@ -2,7 +2,6 @@ package arduino
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -15,9 +14,6 @@ type Arduino struct {
 }
 
 func (a Arduino) SendCommand(command Command) error {
-	fmt.Print("Sending command: ")
-	fmt.Println(command)
-
 	_, err := a.Port.Write([]byte(command))
 
 	return err
