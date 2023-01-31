@@ -35,6 +35,7 @@ func main() {
 
 	fmt.Println("The Arduino is ready!")
 
+	go maintainMoistureLevels(ard, &app)
 	go readMoistureLevels(ard, &app)
 
 	for {
@@ -63,7 +64,7 @@ func main() {
 }
 
 func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
-	ticker := time.NewTicker(10 * time.Millisecond)
+	ticker := time.NewTicker(100 * time.Millisecond)
 
 	quit := make(chan struct{})
 
