@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"log"
+	"time"
 
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
@@ -10,17 +11,26 @@ import (
 )
 
 type Zone struct {
-	Id              string // This will be user defined, used for API calls
-	Name            string
-	TargetMoisture  world.MoistureLevel
-	MoistureSensors []arduino.MoistureSensor
-	WaterOutlets    []arduino.WaterOutlet
-	MoisureReadings []arduino.MoistureReading
+	Id                string // This will be user defined, used for API calls
+	Name              string
+	TargetMoisture    world.MoistureLevel
+	MoistureSensors   []arduino.MoistureSensor
+	WaterOutlets      []arduino.WaterOutlet
+	MoisureReadings   []arduino.MoistureReading
+	Watering          bool
+	WateringChangedAt time.Time
 }
 
-func (z Zone) SetWaterState(ard arduino.Arduino, state bool) {
+func (z *Zone) SetWaterState(ard arduino.Arduino, state bool) {
+	z.Watering = state
+	z.WateringChangedAt = time.Now()
+
+	z.enforceWateringState(ard)
+}
+
+func (z Zone) enforceWateringState(ard arduino.Arduino) {
 	for _, outlet := range z.WaterOutlets {
-		err := ard.SetWaterState(outlet, state)
+		err := ard.SetWaterState(outlet, z.Watering)
 
 		if err != nil {
 			log.Fatal("could not set water state for zone")
