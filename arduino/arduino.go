@@ -2,7 +2,6 @@ package arduino
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -40,15 +39,9 @@ func (a Arduino) ReadLine() string {
 
 		data += string(buff[:n])
 
-		fmt.Print(data)
-
 		if strings.Contains(data, "\n") {
-			fmt.Println("got new line")
 			break
 		}
-
-		fmt.Println("last data was: ")
-		fmt.Print(data)
 	}
 
 	return data
@@ -58,12 +51,7 @@ func (a Arduino) ReadLines(until string) []string {
 	lines := []string{}
 
 	for {
-		fmt.Println(lines)
-
-		fmt.Println("about to ReadLine()")
 		line := a.ReadLine()
-		fmt.Println("done with ReadLine(), got: ")
-		fmt.Print(line)
 
 		lines = append(lines, line)
 
@@ -86,15 +74,12 @@ func (a Arduino) GetReadings() ([]MoistureReading, error) {
 
 	readings := []MoistureReading{}
 
-	fmt.Println("About to read lines")
-
 	for _, line := range a.ReadLines("READINGS_END") {
 		line = strings.TrimSuffix(line, "\n")
 		line = strings.TrimSuffix(line, "\r")
 		reading, err := MakeMoistureReadingFromString(line)
 
 		if err != nil {
-			fmt.Println(err)
 			continue
 		}
 
