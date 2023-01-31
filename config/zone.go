@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -26,12 +25,6 @@ func (z *Zone) SetWaterState(ard arduino.Arduino, state bool) {
 
 	if z.Watering == state {
 		return
-	}
-
-	if state {
-		fmt.Println("Starting water for zone " + z.Name)
-	} else {
-		fmt.Println("Stopping water for zone " + z.Name)
 	}
 
 	z.Watering = state
