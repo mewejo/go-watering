@@ -54,6 +54,8 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 		for {
 			select {
 			case <-ticker.C:
+				fmt.Println("Asking for moisture readings")
+
 				readings, err := ard.GetReadings()
 
 				if err != nil {
