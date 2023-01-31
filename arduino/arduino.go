@@ -40,6 +40,8 @@ func (a Arduino) ReadLine() string {
 
 		data += string(buff[:n])
 
+		fmt.Print(data)
+
 		if strings.Contains(data, "\n") {
 			break
 		}
