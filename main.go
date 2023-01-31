@@ -40,6 +40,7 @@ func setupCloseHandler(ard arduino.Arduino) {
 		<-c
 		fmt.Println("Exiting... turning water off")
 		ard.SendCommand(arduino.WATER_OFF)
+		ard.Port.Close()
 		os.Exit(0)
 	}()
 }
