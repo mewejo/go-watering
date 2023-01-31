@@ -43,6 +43,7 @@ func (a Arduino) ReadLine() string {
 		fmt.Print(data)
 
 		if strings.Contains(data, "\n") {
+			fmt.Println("got new line")
 			break
 		}
 	}
@@ -56,7 +57,9 @@ func (a Arduino) ReadLines(until string) []string {
 	for {
 		fmt.Println(lines)
 
+		fmt.Println("about to ReadLine()")
 		line := a.ReadLine()
+		fmt.Println("done with ReadLine()")
 
 		lines = append(lines, line)
 
