@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -20,18 +19,23 @@ type Zone struct {
 	MoisureReadings   []arduino.MoistureReading
 	Watering          bool
 	WateringChangedAt time.Time
+	ForcedWatering    bool
 }
 
-func (z *Zone) SetWaterState(ard arduino.Arduino, state bool) {
-
-	if z.Watering == state {
+func (z *Zone) SetForcedWateringState(ard arduino.Arduino, state bool) {
+	if z.ForcedWatering == state {
 		return
 	}
 
-	if state {
-		fmt.Println("Starting water for zone " + z.Name)
-	} else {
-		fmt.Println("Stopping water for zone " + z.Name)
+	z.ForcedWatering = state
+	z.WateringChangedAt = time.Now()
+
+	z.EnforceWateringState(ard)
+}
+
+func (z *Zone) SetWaterState(ard arduino.Arduino, state bool) {
+	if z.Watering == state {
+		return
 	}
 
 	z.Watering = state
@@ -42,7 +46,7 @@ func (z *Zone) SetWaterState(ard arduino.Arduino, state bool) {
 
 func (z Zone) EnforceWateringState(ard arduino.Arduino) {
 	for _, outlet := range z.WaterOutlets {
-		err := ard.SetWaterState(outlet, z.Watering)
+		err := ard.SetWaterState(outlet, z.Watering || z.ForcedWatering)
 
 		if err != nil {
 			log.Fatal("could not set water state for zone")
