@@ -62,7 +62,8 @@ func (a Arduino) ReadLines(until string) []string {
 
 		fmt.Println("about to ReadLine()")
 		line := a.ReadLine()
-		fmt.Println("done with ReadLine()")
+		fmt.Println("done with ReadLine(), got: ")
+		fmt.Print(line)
 
 		lines = append(lines, line)
 
