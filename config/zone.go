@@ -1,6 +1,8 @@
 package config
 
 import (
+	"errors"
+
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
 	"github.com/mewejo/go-watering/world"
@@ -22,6 +24,7 @@ func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 	helpers.ReverseSlice(readingsReversed)
 
 	sensorsFound := []arduino.MoistureSensor{}
+	readings := []world.MoistureLevel{}
 
 	for _, reading := range readingsReversed {
 		if moistureSensorInSlice(reading.Sensor, sensorsFound) {
@@ -29,11 +32,30 @@ func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 		}
 
 		sensorsFound = append(sensorsFound, reading.Sensor)
+		readings = append(readings, reading.Original)
 
 		if len(sensorsFound) == len(z.MoistureSensors) {
 			break
 		}
 	}
+
+	if len(sensorsFound) != len(z.MoistureSensors) {
+		return world.MoistureLevel{}, errors.New("incomplete data (sensors), cannot calculate moisture level")
+	}
+
+	if len(readings) != len(z.MoistureSensors) {
+		return world.MoistureLevel{}, errors.New("incomplete data (readings), cannot calculate moisture level")
+	}
+
+	var totalPercentage uint
+
+	for _, reading := range readings {
+		totalPercentage += reading.Percentage
+	}
+
+	return world.MoistureLevel{
+		Percentage: uint(totalPercentage / uint(len(readings))),
+	}, nil
 }
 
 func (z *Zone) RecordMoistureReading(r arduino.MoistureReading) {
