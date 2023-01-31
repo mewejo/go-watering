@@ -65,6 +65,7 @@ func (z *Zone) RecordMoistureReading(r arduino.MoistureReading) {
 
 	fmt.Println("Got moisture reading for sensor")
 	fmt.Printf("Total readings: %v\n", len(z.MoisureReadings))
+	fmt.Println(z.MoisureReadings[0])
 }
 
 func limitMoistureReadings(s *[]arduino.MoistureReading, length int) {
