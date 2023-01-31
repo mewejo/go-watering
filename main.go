@@ -18,6 +18,12 @@ func main() {
 
 	a := arduino.GetArduino()
 
+	fmt.Println("Waiting until Arduino is ready")
+
+	a.WaitUntilReady()
+
+	fmt.Println("The Arduino is ready!")
+
 	go readMoistureLevels(a, app)
 
 	for {
