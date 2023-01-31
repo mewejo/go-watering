@@ -53,13 +53,15 @@ func (a Arduino) ReadLines() []string {
 func (a Arduino) GetReadings() ([]MoistureReading, error) {
 	err := a.SendCommand(REQUEST_READINGS)
 
-	time.Sleep(time.Millisecond * 250)
-
 	if err != nil {
 		return nil, errors.New("could not request readings")
 	}
 
+	time.Sleep(time.Millisecond * 250)
+
 	readings := []MoistureReading{}
+
+	fmt.Println("About to read lines")
 
 	for _, line := range a.ReadLines() {
 		reading, err := MakeMoistureReadingFromString(line)
