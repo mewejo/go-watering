@@ -23,7 +23,7 @@ func (c zoneController) handle(w http.ResponseWriter, r *http.Request) {
 	zoneIndex, err := strconv.Atoi(r.URL.Query().Get("zone"))
 
 	if err != nil {
-		fmt.Fprintf(w, "Bad percentage!")
+		fmt.Fprintf(w, "Bad zone!")
 	}
 
 	c.app.Zones[zoneIndex].TargetMoisture = world.MoistureLevel{
