@@ -137,6 +137,10 @@ func (a Arduino) SetWaterState(outlet WaterOutlet, state bool) error {
 	return a.SendCommand(command)
 }
 
+func (a Arduino) WaitUntilReady() {
+	a.ReadLines("READY")
+}
+
 func findArduinoPort() (string, error) {
 	ports, err := serial.GetPortsList()
 
