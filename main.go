@@ -46,7 +46,7 @@ func main() {
 }
 
 func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
-	ticker := time.NewTicker(2 * time.Second)
+	ticker := time.NewTicker(100 * time.Millisecond)
 
 	quit := make(chan struct{})
 
