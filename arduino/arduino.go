@@ -59,6 +59,20 @@ func (a Arduino) GetReadings() ([]MoistureReading, error) {
 
 	time.Sleep(time.Millisecond * 250)
 
+	buff := make([]byte, 100)
+	for {
+		n, err := a.Port.Read(buff)
+		if err != nil {
+			log.Fatal(err)
+			break
+		}
+		if n == 0 {
+			fmt.Println("\nEOF")
+			break
+		}
+		fmt.Printf("%v", string(buff[:n]))
+	}
+
 	readings := []MoistureReading{}
 
 	fmt.Println("About to read lines")
