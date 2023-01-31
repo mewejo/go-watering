@@ -46,6 +46,9 @@ func (a Arduino) ReadLine() string {
 			fmt.Println("got new line")
 			break
 		}
+
+		fmt.Println("last data was: ")
+		fmt.Print(data)
 	}
 
 	return data
