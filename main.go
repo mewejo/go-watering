@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -17,7 +18,7 @@ func main() {
 
 	a := arduino.GetArduino()
 
-	readMoistureLevels(a, app)
+	go readMoistureLevels(a, app)
 
 	for {
 		a.SendCommand(arduino.WATER_1_ON)
@@ -58,6 +59,8 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 				if err != nil {
 					log.Fatal("Could not get readings from Arduino")
 				}
+
+				fmt.Println("Got moisture readings")
 
 				processMoistureReadings(app, readings)
 			case <-quit:
