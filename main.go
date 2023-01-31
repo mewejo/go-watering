@@ -28,6 +28,7 @@ func main() {
 
 	go maintainMoistureLevels(ard, &app)
 	go readMoistureLevels(ard, &app)
+	go enforceZoneWaterOutletStates(ard, &app)
 
 	for {
 	}
@@ -45,8 +46,8 @@ func setupCloseHandler(ard arduino.Arduino) {
 	}()
 }
 
-func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
-	ticker := time.NewTicker(time.Second)
+func enforceZoneWaterOutletStates(ard arduino.Arduino, app *config.Application) {
+	ticker := time.NewTicker(60 * time.Second)
 
 	quit := make(chan struct{})
 
@@ -55,13 +56,48 @@ func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
 			select {
 			case <-ticker.C:
 				for _, zone := range app.Zones {
-					requiresWatering, err := zone.RequiresWatering()
+					zone.EnforceWateringState(ard)
+				}
+
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
+	ticker := time.NewTicker(10 * time.Second)
+
+	quit := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				for _, zone := range app.Zones {
+					shouldNotBeWatering, err := zone.ShouldStopWatering()
 
 					if err != nil {
-						requiresWatering = false
+						continue
 					}
 
-					zone.SetWaterState(ard, requiresWatering)
+					if shouldNotBeWatering {
+						zone.SetWaterState(ard, false)
+						continue
+					}
+
+					shouldStartWatering, err := zone.ShouldStartWatering()
+
+					if err != nil {
+						continue
+					}
+
+					if shouldStartWatering {
+						zone.SetWaterState(ard, true)
+						continue
+					}
 				}
 
 			case <-quit:
@@ -73,7 +109,7 @@ func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
 }
 
 func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(2 * time.Second)
 
 	quit := make(chan struct{})
 

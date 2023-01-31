@@ -22,13 +22,18 @@ type Zone struct {
 }
 
 func (z *Zone) SetWaterState(ard arduino.Arduino, state bool) {
+
+	if z.Watering == state {
+		return
+	}
+
 	z.Watering = state
 	z.WateringChangedAt = time.Now()
 
-	z.enforceWateringState(ard)
+	z.EnforceWateringState(ard)
 }
 
-func (z Zone) enforceWateringState(ard arduino.Arduino) {
+func (z Zone) EnforceWateringState(ard arduino.Arduino) {
 	for _, outlet := range z.WaterOutlets {
 		err := ard.SetWaterState(outlet, z.Watering)
 
@@ -38,14 +43,38 @@ func (z Zone) enforceWateringState(ard arduino.Arduino) {
 	}
 }
 
-func (z Zone) RequiresWatering() (bool, error) {
+func (z Zone) ShouldStartWatering() (bool, error) {
 	moistureLevel, err := z.AverageMoistureLevel()
 
 	if err != nil {
 		return false, errors.New("could not get average moisture level for zone")
 	}
 
-	if moistureLevel.Percentage < z.TargetMoisture.Percentage {
+	// Already watering... don't need to start
+	if z.Watering {
+		return false, nil
+	}
+
+	if moistureLevel.Percentage < z.TargetMoisture.HysteresisOnLevel().Percentage {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func (z Zone) ShouldStopWatering() (bool, error) {
+	moistureLevel, err := z.AverageMoistureLevel()
+
+	if err != nil {
+		return false, errors.New("could not get average moisture level for zone")
+	}
+
+	// Not watering... don't need to stop
+	if !z.Watering {
+		return false, nil
+	}
+
+	if moistureLevel.Percentage > z.TargetMoisture.HysteresisOffLevel().Percentage {
 		return true, nil
 	}
 
