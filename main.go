@@ -16,35 +16,35 @@ func main() {
 	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
 	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
 
-	a := arduino.GetArduino()
+	ard := arduino.GetArduino()
 
 	fmt.Println("Waiting until Arduino is ready")
 
-	a.WaitUntilReady()
+	ard.WaitUntilReady()
 
 	fmt.Println("The Arduino is ready!")
 
-	go readMoistureLevels(a, &app)
+	go readMoistureLevels(ard, &app)
 
 	for {
-		a.SendCommand(arduino.WATER_1_ON)
+		ard.SendCommand(arduino.WATER_1_ON)
 		time.Sleep(time.Millisecond * 500)
-		a.SendCommand(arduino.WATER_1_OFF)
+		ard.SendCommand(arduino.WATER_1_OFF)
 		time.Sleep(time.Second)
 
-		a.SendCommand(arduino.WATER_2_ON)
+		ard.SendCommand(arduino.WATER_2_ON)
 		time.Sleep(time.Millisecond * 500)
-		a.SendCommand(arduino.WATER_2_OFF)
+		ard.SendCommand(arduino.WATER_2_OFF)
 		time.Sleep(time.Second)
 
-		a.SendCommand(arduino.WATER_3_ON)
+		ard.SendCommand(arduino.WATER_3_ON)
 		time.Sleep(time.Millisecond * 500)
-		a.SendCommand(arduino.WATER_3_OFF)
+		ard.SendCommand(arduino.WATER_3_OFF)
 		time.Sleep(time.Second)
 
-		a.SendCommand(arduino.WATER_4_ON)
+		ard.SendCommand(arduino.WATER_4_ON)
 		time.Sleep(time.Millisecond * 500)
-		a.SendCommand(arduino.WATER_4_OFF)
+		ard.SendCommand(arduino.WATER_4_OFF)
 		time.Sleep(time.Second)
 
 		time.Sleep(time.Second * 2)
@@ -80,7 +80,7 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 }
 
 func processMoistureReadings(app *config.Application, readings []arduino.MoistureReading) {
-	for _, zone := range *app.Zones {
+	for _, zone := range app.Zones {
 		for _, sensor := range zone.MoistureSensors {
 			for _, reading := range readings {
 				if sensor != reading.Sensor {
