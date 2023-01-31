@@ -62,8 +62,37 @@ func main() {
 	}
 }
 
-func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
+func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
 	ticker := time.NewTicker(100 * time.Millisecond)
+
+	quit := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				fmt.Println("maintaining moisture levels")
+
+				for _, zone := range app.Zones {
+					requiresWatering, err := zone.RequiresWatering()
+
+					if err != nil {
+						requiresWatering = false
+					}
+
+					zone.SetWaterState(ard, requiresWatering)
+				}
+
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
+	ticker := time.NewTicker(time.Second)
 
 	quit := make(chan struct{})
 

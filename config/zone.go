@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"log"
 
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
@@ -15,6 +16,30 @@ type Zone struct {
 	MoistureSensors []arduino.MoistureSensor
 	WaterOutlets    []arduino.WaterOutlet
 	MoisureReadings []arduino.MoistureReading
+}
+
+func (z Zone) SetWaterState(ard arduino.Arduino, state bool) {
+	for _, outlet := range z.WaterOutlets {
+		err := ard.SetWaterState(outlet, state)
+
+		if err != nil {
+			log.Fatal("could not set water state for zone")
+		}
+	}
+}
+
+func (z Zone) RequiresWatering() (bool, error) {
+	moistureLevel, err := z.AverageMoistureLevel()
+
+	if err != nil {
+		return false, errors.New("could not get average moisture level for zone")
+	}
+
+	if moistureLevel.Percentage < z.TargetMoisture.Percentage {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
