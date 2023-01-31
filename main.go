@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mewejo/go-watering/api"
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/config"
 )
@@ -30,8 +31,9 @@ func main() {
 	go readMoistureLevels(ard, &app)
 	go enforceZoneWaterOutletStates(ard, &app)
 
-	for {
-	}
+	fmt.Println("Starting API...")
+
+	api.StartApi()
 }
 
 func setupCloseHandler(ard arduino.Arduino) {
