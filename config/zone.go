@@ -67,6 +67,10 @@ func (z *Zone) RecordMoistureReading(r arduino.MoistureReading) {
 }
 
 func limitMoistureReadings(s *[]arduino.MoistureReading, length int) {
+	if len(*s) <= length {
+		return
+	}
+
 	*s = (*s)[len(*s)-length:]
 }
 
