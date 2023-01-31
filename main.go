@@ -13,20 +13,6 @@ func main() {
 
 	app := config.GetApplication()
 
-	/*
-		processMoistureReadings(&app, []arduino.MoistureReading{
-			{}, {},
-		})
-
-		processMoistureReadings(&app, []arduino.MoistureReading{
-			{}, {},
-		})
-
-		fmt.Println(app.Zones[0].MoisureReadings)
-
-		os.Exit(0)
-	*/
-
 	ard := arduino.GetArduino()
 
 	fmt.Println("Waiting until Arduino is ready")
@@ -37,30 +23,6 @@ func main() {
 
 	go maintainMoistureLevels(ard, &app)
 	go readMoistureLevels(ard, &app)
-
-	for {
-		ard.SendCommand(arduino.WATER_1_ON)
-		time.Sleep(time.Millisecond * 500)
-		ard.SendCommand(arduino.WATER_1_OFF)
-		time.Sleep(time.Second)
-
-		ard.SendCommand(arduino.WATER_2_ON)
-		time.Sleep(time.Millisecond * 500)
-		ard.SendCommand(arduino.WATER_2_OFF)
-		time.Sleep(time.Second)
-
-		ard.SendCommand(arduino.WATER_3_ON)
-		time.Sleep(time.Millisecond * 500)
-		ard.SendCommand(arduino.WATER_3_OFF)
-		time.Sleep(time.Second)
-
-		ard.SendCommand(arduino.WATER_4_ON)
-		time.Sleep(time.Millisecond * 500)
-		ard.SendCommand(arduino.WATER_4_OFF)
-		time.Sleep(time.Second)
-
-		time.Sleep(time.Second * 2)
-	}
 }
 
 func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
