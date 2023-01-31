@@ -67,7 +67,7 @@ func (a Arduino) ReadLines(until string) []string {
 
 		lines = append(lines, line)
 
-		if line == until {
+		if strings.Contains(line, until) {
 			break
 		}
 	}
