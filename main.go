@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/mewejo/go-watering/arduino"
@@ -21,16 +24,24 @@ func main() {
 
 	fmt.Println("The Arduino is ready!")
 
-	defer func() {
-		fmt.Println("Turning water off")
-		ard.SendCommand(arduino.WATER_OFF)
-	}()
+	setupCloseHandler(ard)
 
 	go maintainMoistureLevels(ard, &app)
 	go readMoistureLevels(ard, &app)
 
 	for {
 	}
+}
+
+func setupCloseHandler(ard arduino.Arduino) {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		fmt.Println("Exiting... turning water off")
+		ard.SendCommand(arduino.WATER_OFF)
+		os.Exit(0)
+	}()
 }
 
 func maintainMoistureLevels(ard arduino.Arduino, app *config.Application) {
