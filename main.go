@@ -24,7 +24,7 @@ func main() {
 
 	fmt.Println("The Arduino is ready!")
 
-	go readMoistureLevels(a, app)
+	go readMoistureLevels(a, &app)
 
 	for {
 		a.SendCommand(arduino.WATER_1_ON)
