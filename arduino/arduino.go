@@ -24,7 +24,7 @@ func (a Arduino) ReadData(buffer []byte) (int, error) {
 }
 
 func (a Arduino) ReadLine() string {
-	buff := make([]byte, 100)
+	buff := make([]byte, 1)
 	data := ""
 
 	for {
