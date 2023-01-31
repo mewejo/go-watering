@@ -60,7 +60,7 @@ func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 }
 
 func (z Zone) RecordMoistureReading(r arduino.MoistureReading) {
-	*z.MoisureReadings = append(*z.MoisureReadings, r)
+	//z.MoisureReadings = append(z.MoisureReadings, r)
 	//limitMoistureReadings(&z.MoisureReadings, 100)
 
 	fmt.Println("Got moisture reading for sensor")
