@@ -15,13 +15,13 @@ type Zone struct {
 	TargetMoisture  world.MoistureLevel
 	MoistureSensors []arduino.MoistureSensor
 	WaterOutlets    []arduino.WaterOutlet
-	MoisureReadings *[]arduino.MoistureReading
+	MoisureReadings []arduino.MoistureReading
 }
 
 func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 	// Loop over the readings until we have one from each sensor
-	readingsReversed := make([]arduino.MoistureReading, len(*z.MoisureReadings))
-	copy(readingsReversed, *z.MoisureReadings)
+	readingsReversed := make([]arduino.MoistureReading, len(z.MoisureReadings))
+	copy(readingsReversed, z.MoisureReadings)
 	helpers.ReverseSlice(readingsReversed)
 
 	sensorsFound := []arduino.MoistureSensor{}
@@ -60,7 +60,7 @@ func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 }
 
 func (z Zone) RecordMoistureReading(r arduino.MoistureReading) {
-	*z.MoisureReadings = append(*z.MoisureReadings, r)
+	z.MoisureReadings = append(z.MoisureReadings, r)
 	//limitMoistureReadings(&z.MoisureReadings, 100)
 
 	fmt.Println("Got moisture reading for sensor")
