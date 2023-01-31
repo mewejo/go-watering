@@ -16,9 +16,9 @@ func main() {
 
 	app := config.GetApplication()
 
-	ard := arduino.GetArduino()
-
 	fmt.Println("Waiting until Arduino is ready")
+
+	ard := arduino.GetArduino()
 
 	ard.WaitUntilReady()
 
