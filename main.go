@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/mewejo/go-watering/arduino"
@@ -10,6 +11,11 @@ import (
 func main() {
 
 	app := config.GetApplication()
+
+	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
+	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
+
+	fmt.Print(app)
 
 	a := arduino.GetArduino()
 

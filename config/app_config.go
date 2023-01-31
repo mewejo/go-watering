@@ -19,8 +19,8 @@ func GetApplication() *Application {
 					Percentage: 70,
 				},
 				MoistureSensors: []arduino.MoistureSensor{
-					arduino.MOSTURE_SENSOR_1,
-					arduino.MOSTURE_SENSOR_2,
+					arduino.MOISTURE_SENSOR_1,
+					arduino.MOISTURE_SENSOR_2,
 				},
 				WaterOutlets: []arduino.WaterOutlet{
 					arduino.WATER_OUTLET_1,
@@ -33,8 +33,8 @@ func GetApplication() *Application {
 					Percentage: 70,
 				},
 				MoistureSensors: []arduino.MoistureSensor{
-					arduino.MOSTURE_SENSOR_3,
-					arduino.MOSTURE_SENSOR_4,
+					arduino.MOISTURE_SENSOR_3,
+					arduino.MOISTURE_SENSOR_4,
 				},
 				WaterOutlets: []arduino.WaterOutlet{
 					arduino.WATER_OUTLET_2,
@@ -47,8 +47,8 @@ func GetApplication() *Application {
 					Percentage: 70,
 				},
 				MoistureSensors: []arduino.MoistureSensor{
-					arduino.MOSTURE_SENSOR_5,
-					arduino.MOSTURE_SENSOR_6,
+					arduino.MOISTURE_SENSOR_5,
+					arduino.MOISTURE_SENSOR_6,
 				},
 				WaterOutlets: []arduino.WaterOutlet{
 					arduino.WATER_OUTLET_3,

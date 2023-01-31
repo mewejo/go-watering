@@ -13,3 +13,7 @@ type Zone struct {
 	WaterOutlets    []arduino.WaterOutlet
 	MoisureReadings []arduino.MoistureReading
 }
+
+func (z *Zone) RecordMoistureReading(r arduino.MoistureReading) {
+	z.MoisureReadings = append(z.MoisureReadings, r)
+}

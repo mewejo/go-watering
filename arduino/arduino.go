@@ -2,8 +2,10 @@ package arduino
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"go.bug.st/serial"
 )
@@ -15,6 +17,69 @@ type Arduino struct {
 func (a Arduino) SendCommand(command Command) error {
 	_, err := a.Port.Write([]byte(command))
 	return err
+}
+
+func (a Arduino) ReadData(buffer []byte) (int, error) {
+	return a.Port.Read(buffer)
+}
+
+func (a Arduino) ReadLines() []string {
+	buff := make([]byte, 100)
+	data := ""
+	lines := []string{}
+
+	for {
+		n, err := a.ReadData(buff)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if n == 0 {
+			break
+		}
+
+		data += string(buff[:n])
+
+		if strings.Contains(data, "\n") {
+			lines = append(lines, data)
+			data = ""
+		}
+	}
+
+	return lines
+}
+
+func (a Arduino) GetReadings() ([]MoistureReading, error) {
+	err := a.SendCommand(REQUEST_READINGS)
+
+	time.Sleep(time.Millisecond * 250)
+
+	if err != nil {
+		return nil, errors.New("could not request readings")
+	}
+
+	readings := []MoistureReading{}
+
+	for _, line := range a.ReadLines() {
+		reading, err := MakeMoistureReadingFromString(line)
+
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		readings = append(
+			readings,
+			reading,
+		)
+	}
+
+	if len(readings) < 1 {
+		return nil, errors.New("no readings returned from Arduino")
+	}
+
+	return readings, nil
 }
 
 func (a Arduino) SetAllWaterState(state bool) error {
