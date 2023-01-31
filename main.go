@@ -13,8 +13,19 @@ func main() {
 
 	app := config.GetApplication()
 
-	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
-	//app.Zones[0].RecordMoistureReading(arduino.MoistureReading{})
+	/*
+		processMoistureReadings(&app, []arduino.MoistureReading{
+			{}, {},
+		})
+
+		processMoistureReadings(&app, []arduino.MoistureReading{
+			{}, {},
+		})
+
+		fmt.Println(app.Zones[0].MoisureReadings)
+
+		os.Exit(0)
+	*/
 
 	ard := arduino.GetArduino()
 
