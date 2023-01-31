@@ -19,6 +19,8 @@ func (a Arduino) SendCommand(command Command) error {
 	fmt.Println(command)
 
 	_, err := a.Port.Write([]byte(command))
+	fmt.Print("Sent!")
+
 	return err
 }
 
