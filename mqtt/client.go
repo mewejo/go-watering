@@ -30,7 +30,7 @@ func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) {
 		zone.GetHomeAssistantStateTopic(),
 		0,
 		false,
-		"44", // TODO
+		"{\"humidity\": 33}", // TODO
 	)
 }
 
