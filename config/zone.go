@@ -2,11 +2,14 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
+	"github.com/mewejo/go-watering/homeassistant"
 	"github.com/mewejo/go-watering/world"
 )
 
@@ -20,6 +23,51 @@ type Zone struct {
 	Watering          bool
 	WateringChangedAt time.Time
 	ForcedWatering    bool
+}
+
+func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
+	c := homeassistant.NewZoneConfiguration()
+	c.ObjectId = z.GetHomeAssistantObjectId()
+	c.UniqueId = z.GetHomeAssistantObjectId()
+	c.Name = z.Name
+	c.StateTopic = z.GetHomeAssistantStateTopic()
+	c.CommandTopic = z.GetHomeAssistantCommandTopic()
+	c.TargetHumidityTopic = z.GetHomeAssistantTargetHumidityTopic()
+	c.AvailabilityTopic = z.GetHomeAssistantAvailabilityTopic()
+
+	c.Device = homeassistant.NewDeviceDetails()
+	c.Device.Identifier = "watering-zone-" + z.Id
+	c.Device.Name = z.Name
+
+	return c
+}
+
+func (z Zone) GetHomeAssistantBaseTopic() string {
+	return fmt.Sprintf(
+		"%v/humidifier/%v",
+		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX"),
+		z.GetHomeAssistantObjectId(),
+	)
+}
+
+func (z Zone) GetHomeAssistantAvailabilityTopic() string {
+	return fmt.Sprintf("%v/availability", z.GetHomeAssistantBaseTopic())
+}
+
+func (z Zone) GetHomeAssistantCommandTopic() string {
+	return fmt.Sprintf("%v/command", z.GetHomeAssistantBaseTopic())
+}
+
+func (z Zone) GetHomeAssistantTargetHumidityTopic() string {
+	return fmt.Sprintf("%v/target", z.GetHomeAssistantBaseTopic())
+}
+
+func (z Zone) GetHomeAssistantStateTopic() string {
+	return fmt.Sprintf("%v/state", z.GetHomeAssistantBaseTopic())
+}
+
+func (z Zone) GetHomeAssistantObjectId() string {
+	return os.Getenv("HOME_ASSISTANT_OBJECT_ID_PREFIX") + z.Id
 }
 
 func (z *Zone) SetForcedWateringState(ard arduino.Arduino, state bool) {

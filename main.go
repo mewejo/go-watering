@@ -13,6 +13,7 @@ import (
 	"github.com/mewejo/go-watering/api"
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/config"
+	"github.com/mewejo/go-watering/mqtt"
 )
 
 func main() {
@@ -23,7 +24,19 @@ func main() {
 
 	app := config.GetApplication()
 
-	fmt.Println("Waiting until Arduino is ready")
+	fmt.Println("Connecting to MQTT broker...")
+
+	mqttClient := mqtt.GetClient()
+
+	fmt.Println("Connected to MQTT!")
+
+	fmt.Println("Publishing Home Assistant auto discovery...")
+
+	for _, zone := range app.Zones {
+		mqtt.PublishHomeAsssitantAutoDiscovery(mqttClient, *zone)
+	}
+
+	fmt.Println("Waiting until Arduino is ready...")
 
 	ard := arduino.GetArduino()
 
