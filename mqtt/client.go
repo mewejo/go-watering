@@ -16,6 +16,24 @@ var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("MSG: %s\n", msg.Payload())
 }
 
+func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) {
+	c.Publish(
+		zone.GetHomeAssistantAvailabilityTopic(),
+		0,
+		false,
+		"online",
+	)
+}
+
+func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) {
+	c.Publish(
+		zone.GetHomeAssistantStateTopic(),
+		0,
+		false,
+		"44", // TODO
+	)
+}
+
 func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone) {
 
 	topic := fmt.Sprintf(

@@ -10,11 +10,14 @@ import (
 
 	"github.com/joho/godotenv"
 
+	mqttLib "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/api"
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/config"
 	"github.com/mewejo/go-watering/mqtt"
 )
+
+var mqttClient mqttLib.Client
 
 func main() {
 
@@ -26,7 +29,7 @@ func main() {
 
 	fmt.Println("Connecting to MQTT broker...")
 
-	mqttClient := mqtt.GetClient()
+	mqttClient = mqtt.GetClient()
 
 	fmt.Println("Connected to MQTT!")
 
@@ -34,6 +37,7 @@ func main() {
 
 	for _, zone := range app.Zones {
 		mqtt.PublishHomeAsssitantAutoDiscovery(mqttClient, *zone)
+		mqtt.PublishHomeAssistantAvailability(mqttClient, *zone)
 	}
 
 	fmt.Println("Waiting until Arduino is ready...")
@@ -168,6 +172,7 @@ func processMoistureReadings(app *config.Application, readings []arduino.Moistur
 				// This 3 level nesting feels nasty
 
 				zone.RecordMoistureReading(reading)
+				mqtt.PublishHomeAssistantState(mqttClient, *zone)
 			}
 		}
 	}

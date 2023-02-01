@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
 	"github.com/mewejo/go-watering/homeassistant"
@@ -23,6 +24,15 @@ type Zone struct {
 	Watering          bool
 	WateringChangedAt time.Time
 	ForcedWatering    bool
+}
+
+func (z Zone) PublishHomeAssistantAvailability(mqtt mqtt.Client) {
+	mqtt.Publish(
+		z.GetHomeAssistantAvailabilityTopic(),
+		0,
+		false,
+		"online",
+	)
 }
 
 func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
