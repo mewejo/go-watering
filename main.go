@@ -8,12 +8,18 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"github.com/mewejo/go-watering/api"
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/config"
 )
 
 func main() {
+
+	if godotenv.Load() != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	app := config.GetApplication()
 
