@@ -36,6 +36,7 @@ func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
 	c.TargetHumidityStateTopic = z.GetHomeAssistantTargetStateHumidityTopic()
 	c.AvailabilityTopic = z.GetHomeAssistantAvailabilityTopic()
 	c.ModeStateTopic = z.GetHomeAssistantModeStateTopic()
+	c.ModeCommandTopic = z.GetHomeAssistantModeCommandTopic()
 
 	c.Device = homeassistant.NewDeviceDetails()
 	c.Device.Identifier = "watering-zone-" + z.Id
@@ -54,6 +55,10 @@ func (z Zone) GetHomeAssistantBaseTopic() string {
 
 func (z Zone) GetHomeAssistantModeStateTopic() string {
 	return fmt.Sprintf("%v/mode_state", z.GetHomeAssistantBaseTopic())
+}
+
+func (z Zone) GetHomeAssistantModeCommandTopic() string {
+	return fmt.Sprintf("%v/mode_command", z.GetHomeAssistantBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantAvailabilityTopic() string {

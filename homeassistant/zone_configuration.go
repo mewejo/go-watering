@@ -15,8 +15,11 @@ type ZoneConfiguration struct {
 	Device                   DeviceDetails `json:"device"`
 	PayloadAvailable         string        `json:"payload_available"`
 	PayloadNotAvailable      string        `json:"payload_not_available"`
+	PayloadOn                string        `json:"payload_on"`
+	PayloadOff               string        `json:"payload_off"`
 	Optimistic               bool          `json:"optimistic"`
 	StateValueTemplate       string        `json:"state_value_template"`
+	ModeCommandTopic         string        `json:"mode_command_topic"`
 	ModeStateTopic           string        `json:"mode_state_topic"`
 	Modes                    []string      `json:"modes"`
 }
@@ -30,6 +33,7 @@ type DeviceDetails struct {
 
 type ZoneState struct {
 	MoistureLevel world.MoistureLevel `json:"humidity"`
+	State         string              `json:"state"`
 }
 
 func NewDeviceDetails() DeviceDetails {
@@ -44,7 +48,9 @@ func NewZoneConfiguration() ZoneConfiguration {
 	c.DeviceClass = "humidifier"
 	c.PayloadAvailable = "online"
 	c.PayloadNotAvailable = "offline"
-	c.StateValueTemplate = "{{ value_json.humidity.percentage }}"
+	c.PayloadOn = "on"
+	c.PayloadOff = "off"
+	c.StateValueTemplate = "{{ value_json.state }}"
 	c.Modes = []string{"normal"}
 	return c
 }

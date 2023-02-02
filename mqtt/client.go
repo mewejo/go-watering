@@ -47,6 +47,7 @@ func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) mqtt.Toke
 
 func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) (mqtt.Token, error) {
 	state := homeassistant.ZoneState{}
+	state.State = "on"
 	state.MoistureLevel = world.MoistureLevel{
 		Percentage: 66,
 	}
