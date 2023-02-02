@@ -4,7 +4,7 @@ package world
 const hysteresis = 0.05
 
 type MoistureLevel struct {
-	Percentage uint
+	Percentage uint `json:"percentage"`
 }
 
 func percentageToMoistureLevel(level float64) MoistureLevel {

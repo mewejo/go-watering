@@ -38,6 +38,14 @@ func main() {
 	for _, zone := range app.Zones {
 		mqtt.PublishHomeAsssitantAutoDiscovery(mqttClient, *zone)
 		mqtt.PublishHomeAssistantAvailability(mqttClient, *zone)
+
+		token, _ := mqtt.PublishHomeAssistantState(mqttClient, *zone)
+
+		if token != nil {
+			token.Wait()
+		}
+
+		mqtt.PublishHomeAssistantTargetHumidity(mqttClient, *zone).Wait()
 	}
 
 	fmt.Println("Waiting until Arduino is ready...")
@@ -173,6 +181,8 @@ func processMoistureReadings(app *config.Application, readings []arduino.Moistur
 
 				zone.RecordMoistureReading(reading)
 				mqtt.PublishHomeAssistantState(mqttClient, *zone)
+				mqtt.PublishHomeAssistantAvailability(mqttClient, *zone)
+				mqtt.PublishHomeAssistantTargetHumidity(mqttClient, *zone)
 			}
 		}
 	}

@@ -9,6 +9,8 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/config"
+	"github.com/mewejo/go-watering/homeassistant"
+	"github.com/mewejo/go-watering/world"
 )
 
 var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
@@ -16,8 +18,17 @@ var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("MSG: %s\n", msg.Payload())
 }
 
-func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) {
-	c.Publish(
+func PublishHomeAssistantTargetHumidity(c mqtt.Client, zone config.Zone) mqtt.Token {
+	return c.Publish(
+		zone.GetHomeAssistantTargetStateHumidityTopic(),
+		0,
+		false,
+		"33", // TODO
+	)
+}
+
+func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) mqtt.Token {
+	return c.Publish(
 		zone.GetHomeAssistantAvailabilityTopic(),
 		0,
 		false,
@@ -25,13 +36,24 @@ func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) {
 	)
 }
 
-func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) {
-	c.Publish(
+func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) (mqtt.Token, error) {
+	state := homeassistant.ZoneState{}
+	state.MoistureLevel = world.MoistureLevel{
+		Percentage: 66,
+	}
+
+	json, err := json.Marshal(state)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.Publish(
 		zone.GetHomeAssistantStateTopic(),
 		0,
-		false,
-		"{\"humidity\": 33}", // TODO
-	)
+		true,
+		json, // TODO
+	), nil
 }
 
 func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone) {

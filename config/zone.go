@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/helpers"
 	"github.com/mewejo/go-watering/homeassistant"
@@ -26,15 +25,6 @@ type Zone struct {
 	ForcedWatering    bool
 }
 
-func (z Zone) PublishHomeAssistantAvailability(mqtt mqtt.Client) {
-	mqtt.Publish(
-		z.GetHomeAssistantAvailabilityTopic(),
-		0,
-		false,
-		"online",
-	)
-}
-
 func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
 	c := homeassistant.NewZoneConfiguration()
 	c.ObjectId = z.GetHomeAssistantObjectId()
@@ -43,6 +33,7 @@ func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
 	c.StateTopic = z.GetHomeAssistantStateTopic()
 	c.CommandTopic = z.GetHomeAssistantCommandTopic()
 	c.TargetHumidityTopic = z.GetHomeAssistantTargetHumidityTopic()
+	c.TargetHumidityStateTopic = z.GetHomeAssistantTargetStateHumidityTopic()
 	c.AvailabilityTopic = z.GetHomeAssistantAvailabilityTopic()
 
 	c.Device = homeassistant.NewDeviceDetails()
@@ -70,6 +61,10 @@ func (z Zone) GetHomeAssistantCommandTopic() string {
 
 func (z Zone) GetHomeAssistantTargetHumidityTopic() string {
 	return fmt.Sprintf("%v/target", z.GetHomeAssistantBaseTopic())
+}
+
+func (z Zone) GetHomeAssistantTargetStateHumidityTopic() string {
+	return fmt.Sprintf("%v/humidity_state", z.GetHomeAssistantBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantStateTopic() string {
