@@ -29,7 +29,7 @@ func (z Zone) GetHomeAssistantHumidifierConfiguration() homeassistant.Humidifier
 	c := homeassistant.NewZoneHumidifierConfiguration()
 	c.ObjectId = z.GetHomeAssistantObjectId()
 	c.UniqueId = z.GetHomeAssistantObjectId()
-	c.Name = z.Name + " Hygrostat"
+	c.Name = z.Name + " Soaker"
 	c.StateTopic = z.GetHomeAssistantStateTopic()
 	c.CommandTopic = z.GetHomeAssistantCommandTopic()
 	c.TargetHumidityTopic = z.GetHomeAssistantTargetHumidityTopic()
