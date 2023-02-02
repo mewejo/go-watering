@@ -47,9 +47,9 @@ func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) mqtt.Toke
 
 func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) (mqtt.Token, error) {
 	state := homeassistant.ZoneState{}
-	state.State = "on"
+	state.State = "on" // TODO
 	state.MoistureLevel = world.MoistureLevel{
-		Percentage: 66,
+		Percentage: 66, // TODO
 	}
 
 	json, err := json.Marshal(state)
@@ -62,27 +62,49 @@ func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) (mqtt.Token, err
 		zone.GetHomeAssistantStateTopic(),
 		0,
 		true,
-		json, // TODO
+		json,
 	), nil
 }
 
 func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone) {
 
-	topic := fmt.Sprintf(
-		"%v/humidifier/%v/config",
-		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX"),
-		zone.GetHomeAssistantObjectId(),
+	var topic string
+	var err error
+	var zoneConfigJson []byte
+	var token mqtt.Token
+
+	// Main device
+	topic = fmt.Sprintf(
+		"%v/config",
+		zone.GetHomeAssistantHumidifierBaseTopic(),
 	)
 
-	zoneConfigJson, err := json.Marshal(
-		zone.GetHomeAssistantConfiguration(),
+	zoneConfigJson, err = json.Marshal(
+		zone.GetHomeAssistantHumidifierConfiguration(),
 	)
 
 	if err != nil {
-		log.Fatal("Could not create Home Assistant config for zone: " + zone.Id)
+		log.Fatal("Could not create Home Assistant config for zone humidifier: " + zone.Id)
 	}
 
-	token := c.Publish(topic, 1, true, zoneConfigJson)
+	token = c.Publish(topic, 1, true, zoneConfigJson)
+	token.Wait()
+
+	// Now the average sensor
+	topic = fmt.Sprintf(
+		"%v/config",
+		zone.GetHomeAssistantMoistureSensorBaseTopic(),
+	)
+
+	zoneConfigJson, err = json.Marshal(
+		zone.GetHomeAssistantMoistureSensorConfiguration(),
+	)
+
+	if err != nil {
+		log.Fatal("Could not create Home Assistant config for zone average moisture sensor: " + zone.Id)
+	}
+
+	token = c.Publish(topic, 1, true, zoneConfigJson)
 	token.Wait()
 }
 

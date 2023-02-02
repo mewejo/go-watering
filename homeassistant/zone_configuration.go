@@ -2,7 +2,7 @@ package homeassistant
 
 import "github.com/mewejo/go-watering/world"
 
-type ZoneConfiguration struct {
+type HumidifierConfiguration struct {
 	StateTopic               string        `json:"state_topic"`
 	DeviceClass              string        `json:"device_class"`
 	Name                     string        `json:"name"`
@@ -24,6 +24,20 @@ type ZoneConfiguration struct {
 	Modes                    []string      `json:"modes"`
 }
 
+type MoistureSensorConfiguration struct {
+	Name                string        `json:"name"`
+	DeviceClass         string        `json:"device_class"`
+	ObjectId            string        `json:"object_id"`
+	UniqueId            string        `json:"unique_id"`
+	StateTopic          string        `json:"state_topic"`
+	StateValueTemplate  string        `json:"value_template"`
+	AvailabilityTopic   string        `json:"availability_topic"`
+	UnitOfMeasurement   string        `json:"unit_of_measurement"`
+	Device              DeviceDetails `json:"device"`
+	PayloadAvailable    string        `json:"payload_available"`
+	PayloadNotAvailable string        `json:"payload_not_available"`
+}
+
 type DeviceDetails struct {
 	Identifier   string `json:"identifiers"`
 	Name         string `json:"name"`
@@ -32,7 +46,7 @@ type DeviceDetails struct {
 }
 
 type ZoneState struct {
-	MoistureLevel world.MoistureLevel `json:"humidity"`
+	MoistureLevel world.MoistureLevel `json:"moisture"`
 	State         string              `json:"state"`
 }
 
@@ -40,11 +54,25 @@ func NewDeviceDetails() DeviceDetails {
 	d := DeviceDetails{}
 	d.Manufacturer = "Josh Bonfield"
 	d.Model = "Go Watering"
+	d.Identifier = "vegtable-soaker"
+	d.Name = "Vegtable Soaker"
+
 	return d
 }
 
-func NewZoneConfiguration() ZoneConfiguration {
-	c := ZoneConfiguration{}
+func NewMoistureSensorConfiguration() MoistureSensorConfiguration {
+	c := MoistureSensorConfiguration{}
+	c.DeviceClass = "moisture"
+	c.StateValueTemplate = "{{ value_json.moisture.percentage }}"
+	c.UnitOfMeasurement = "%"
+	c.PayloadAvailable = "online"
+	c.PayloadNotAvailable = "offline"
+
+	return c
+}
+
+func NewZoneHumidifierConfiguration() HumidifierConfiguration {
+	c := HumidifierConfiguration{}
 	c.DeviceClass = "humidifier"
 	c.PayloadAvailable = "online"
 	c.PayloadNotAvailable = "offline"

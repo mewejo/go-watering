@@ -25,11 +25,11 @@ type Zone struct {
 	ForcedWatering    bool
 }
 
-func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
-	c := homeassistant.NewZoneConfiguration()
+func (z Zone) GetHomeAssistantHumidifierConfiguration() homeassistant.HumidifierConfiguration {
+	c := homeassistant.NewZoneHumidifierConfiguration()
 	c.ObjectId = z.GetHomeAssistantObjectId()
 	c.UniqueId = z.GetHomeAssistantObjectId()
-	c.Name = z.Name
+	c.Name = z.Name + " Hygrostat"
 	c.StateTopic = z.GetHomeAssistantStateTopic()
 	c.CommandTopic = z.GetHomeAssistantCommandTopic()
 	c.TargetHumidityTopic = z.GetHomeAssistantTargetHumidityTopic()
@@ -37,15 +37,24 @@ func (z Zone) GetHomeAssistantConfiguration() homeassistant.ZoneConfiguration {
 	c.AvailabilityTopic = z.GetHomeAssistantAvailabilityTopic()
 	c.ModeStateTopic = z.GetHomeAssistantModeStateTopic()
 	c.ModeCommandTopic = z.GetHomeAssistantModeCommandTopic()
-
 	c.Device = homeassistant.NewDeviceDetails()
-	c.Device.Identifier = "watering-zone-" + z.Id
-	c.Device.Name = z.Name
 
 	return c
 }
 
-func (z Zone) GetHomeAssistantBaseTopic() string {
+func (z Zone) GetHomeAssistantMoistureSensorConfiguration() homeassistant.MoistureSensorConfiguration {
+	c := homeassistant.NewMoistureSensorConfiguration()
+	c.Name = z.Name + " Moisture"
+	c.ObjectId = z.GetHomeAssistantObjectId()
+	c.UniqueId = z.GetHomeAssistantObjectId()
+	c.StateTopic = z.GetHomeAssistantStateTopic()
+	c.AvailabilityTopic = z.GetHomeAssistantAvailabilityTopic()
+	c.Device = homeassistant.NewDeviceDetails()
+
+	return c
+}
+
+func (z Zone) GetHomeAssistantHumidifierBaseTopic() string {
 	return fmt.Sprintf(
 		"%v/humidifier/%v",
 		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX"),
@@ -53,32 +62,40 @@ func (z Zone) GetHomeAssistantBaseTopic() string {
 	)
 }
 
+func (z Zone) GetHomeAssistantMoistureSensorBaseTopic() string {
+	return fmt.Sprintf(
+		"%v/sensor/%v/average-moisture",
+		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX"),
+		z.GetHomeAssistantObjectId(),
+	)
+}
+
 func (z Zone) GetHomeAssistantModeStateTopic() string {
-	return fmt.Sprintf("%v/mode_state", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/mode_state", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantModeCommandTopic() string {
-	return fmt.Sprintf("%v/mode_command", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/mode_command", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantAvailabilityTopic() string {
-	return fmt.Sprintf("%v/availability", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/availability", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantCommandTopic() string {
-	return fmt.Sprintf("%v/command", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/command", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantTargetHumidityTopic() string {
-	return fmt.Sprintf("%v/target", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/target", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantTargetStateHumidityTopic() string {
-	return fmt.Sprintf("%v/humidity_state", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/humidity_state", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantStateTopic() string {
-	return fmt.Sprintf("%v/state", z.GetHomeAssistantBaseTopic())
+	return fmt.Sprintf("%v/state", z.GetHomeAssistantHumidifierBaseTopic())
 }
 
 func (z Zone) GetHomeAssistantObjectId() string {

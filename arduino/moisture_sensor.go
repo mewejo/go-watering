@@ -13,6 +13,24 @@ const (
 	MOISTURE_SENSOR_6
 )
 
+func (ms MoistureSensor) GetId() int {
+	if ms == MOISTURE_SENSOR_1 {
+		return 1
+	} else if ms == MOISTURE_SENSOR_2 {
+		return 2
+	} else if ms == MOISTURE_SENSOR_3 {
+		return 3
+	} else if ms == MOISTURE_SENSOR_4 {
+		return 4
+	} else if ms == MOISTURE_SENSOR_5 {
+		return 5
+	} else if ms == MOISTURE_SENSOR_6 {
+		return 16
+	}
+
+	return 0
+}
+
 func MoistureSensorFromId(id int) (MoistureSensor, error) {
 	if id == 1 {
 		return MOISTURE_SENSOR_1, nil
