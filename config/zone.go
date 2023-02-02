@@ -194,6 +194,10 @@ func (z Zone) AverageMoistureLevel() (world.MoistureLevel, error) {
 		}
 	}
 
+	if len(readings) < 1 {
+		return world.MoistureLevel{}, errors.New("no readings to make average from")
+	}
+
 	if len(sensorsFound) != len(z.MoistureSensors) {
 		return world.MoistureLevel{}, errors.New("incomplete data (sensors), cannot calculate moisture level")
 	}
