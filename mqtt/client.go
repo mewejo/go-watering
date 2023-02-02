@@ -94,6 +94,11 @@ func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone) {
 	token = c.Publish(topic, 1, true, zoneConfigJson)
 	token.Wait()
 
+	// No sensors, no average!
+	if len(zone.MoistureSensors) < 1 {
+		return
+	}
+
 	// Now the average sensor
 	topic = fmt.Sprintf(
 		"%v/config",
