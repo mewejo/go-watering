@@ -54,8 +54,8 @@ func NewDeviceDetails() DeviceDetails {
 	d := DeviceDetails{}
 	d.Manufacturer = "Josh Bonfield"
 	d.Model = "Go Watering"
-	d.Identifier = "vegtable-soaker"
-	d.Name = "Vegtable Soaker"
+	d.Identifier = "vegetable-soaker"
+	d.Name = "Vegetable Soaker"
 
 	return d
 }

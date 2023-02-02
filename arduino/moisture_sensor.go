@@ -1,6 +1,12 @@
 package arduino
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"os"
+
+	"github.com/mewejo/go-watering/homeassistant"
+)
 
 type MoistureSensor int
 
@@ -12,6 +18,41 @@ const (
 	MOISTURE_SENSOR_5
 	MOISTURE_SENSOR_6
 )
+
+func (ms MoistureSensor) GetHomeAssistantMoistureSensorConfiguration() homeassistant.MoistureSensorConfiguration {
+	c := homeassistant.NewMoistureSensorConfiguration()
+	c.Name = fmt.Sprintf("Moisture Sensor #%v", ms.GetId())
+	c.ObjectId = ms.GetHomeAssistantObjectId()
+	c.UniqueId = ms.GetHomeAssistantObjectId()
+	c.StateTopic = ms.GetHomeAssistantStateTopic()
+	c.AvailabilityTopic = ms.GetHomeAssistantAvailabilityTopic()
+	c.Device = homeassistant.NewDeviceDetails()
+
+	return c
+}
+
+func (ms MoistureSensor) GetHomeAssistantStateTopic() string {
+	return fmt.Sprintf("%v/state", ms.GetHomeAssistantBaseTopic())
+}
+
+func (ms MoistureSensor) GetHomeAssistantAvailabilityTopic() string {
+	return fmt.Sprintf("%v/availability", ms.GetHomeAssistantBaseTopic())
+}
+
+func (ms MoistureSensor) GetHomeAssistantBaseTopic() string {
+	return fmt.Sprintf(
+		"%v/sensor/vegetable-soaker/%v",
+		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX"),
+		ms.GetHomeAssistantObjectId(),
+	)
+}
+
+func (ms MoistureSensor) GetHomeAssistantObjectId() string {
+	return fmt.Sprintf(
+		"moisture-sensor-%v",
+		ms.GetId(),
+	)
+}
 
 func (ms MoistureSensor) GetId() int {
 	if ms == MOISTURE_SENSOR_1 {
@@ -25,7 +66,7 @@ func (ms MoistureSensor) GetId() int {
 	} else if ms == MOISTURE_SENSOR_5 {
 		return 5
 	} else if ms == MOISTURE_SENSOR_6 {
-		return 16
+		return 6
 	}
 
 	return 0

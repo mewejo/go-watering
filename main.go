@@ -36,7 +36,15 @@ func main() {
 	fmt.Println("Publishing Home Assistant auto discovery...")
 
 	for _, zone := range app.Zones {
-		mqtt.PublishHomeAsssitantAutoDiscovery(mqttClient, *zone)
+		mqtt.PublishHomeAsssitantAutoDiscovery(mqttClient, *zone, []arduino.MoistureSensor{
+			arduino.MOISTURE_SENSOR_1,
+			arduino.MOISTURE_SENSOR_2,
+			arduino.MOISTURE_SENSOR_3,
+			arduino.MOISTURE_SENSOR_4,
+			arduino.MOISTURE_SENSOR_5,
+			arduino.MOISTURE_SENSOR_6,
+		})
+
 		mqtt.PublishHomeAssistantAvailability(mqttClient, *zone)
 
 		token, _ := mqtt.PublishHomeAssistantState(mqttClient, *zone)

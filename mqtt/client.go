@@ -8,6 +8,7 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/mewejo/go-watering/arduino"
 	"github.com/mewejo/go-watering/config"
 	"github.com/mewejo/go-watering/homeassistant"
 )
@@ -70,7 +71,7 @@ func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) (mqtt.Token, err
 	), nil
 }
 
-func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone) {
+func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone, moistureSensors []arduino.MoistureSensor) {
 
 	var topic string
 	var err error
@@ -115,6 +116,27 @@ func PublishHomeAsssitantAutoDiscovery(c mqtt.Client, zone config.Zone) {
 
 	token = c.Publish(topic, 1, true, zoneConfigJson)
 	token.Wait()
+
+	// Now the sensors on their own
+	for _, sensor := range moistureSensors {
+		topic = fmt.Sprintf(
+			"%v/config",
+			sensor.GetHomeAssistantBaseTopic(),
+		)
+
+		sensorConfigJson, err := json.Marshal(
+			sensor.GetHomeAssistantMoistureSensorConfiguration(),
+		)
+
+		if err != nil {
+			log.Fatal(
+				fmt.Sprintf("Could not create Home Assistant config for zone moisture sensor: %v", sensor.GetId()),
+			)
+		}
+
+		token = c.Publish(topic, 1, true, sensorConfigJson)
+		token.Wait()
+	}
 }
 
 func GetClient() mqtt.Client {
