@@ -18,6 +18,7 @@ type ZoneConfiguration struct {
 	Optimistic               bool          `json:"optimistic"`
 	StateValueTemplate       string        `json:"state_value_template"`
 	ModeStateTopic           string        `json:"mode_state_topic"`
+	Modes                    []string      `json:"modes"`
 }
 
 type DeviceDetails struct {
@@ -44,5 +45,6 @@ func NewZoneConfiguration() ZoneConfiguration {
 	c.PayloadAvailable = "online"
 	c.PayloadNotAvailable = "offline"
 	c.StateValueTemplate = "{{ value_json.humidity.percentage }}"
+	c.Modes = []string{"normal"}
 	return c
 }
