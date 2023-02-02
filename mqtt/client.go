@@ -18,6 +18,15 @@ var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("MSG: %s\n", msg.Payload())
 }
 
+func PublishHomeAssistantModeState(c mqtt.Client, zone config.Zone) mqtt.Token {
+	return c.Publish(
+		zone.GetHomeAssistantModeStateTopic(),
+		0,
+		false,
+		"normal", // TODO
+	)
+}
+
 func PublishHomeAssistantTargetHumidity(c mqtt.Client, zone config.Zone) mqtt.Token {
 	return c.Publish(
 		zone.GetHomeAssistantTargetStateHumidityTopic(),

@@ -17,6 +17,7 @@ type ZoneConfiguration struct {
 	PayloadNotAvailable      string        `json:"payload_not_available"`
 	Optimistic               bool          `json:"optimistic"`
 	StateValueTemplate       string        `json:"state_value_template"`
+	ModeStateTopic           string        `json:"mode_state_topic"`
 }
 
 type DeviceDetails struct {
