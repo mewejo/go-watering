@@ -10,7 +10,6 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/config"
 	"github.com/mewejo/go-watering/homeassistant"
-	"github.com/mewejo/go-watering/world"
 )
 
 var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
@@ -32,7 +31,7 @@ func PublishHomeAssistantTargetHumidity(c mqtt.Client, zone config.Zone) mqtt.To
 		zone.GetHomeAssistantTargetStateHumidityTopic(),
 		0,
 		false,
-		"33", // TODO
+		fmt.Sprintf("%v", zone.TargetMoisture.Percentage),
 	)
 }
 
@@ -46,11 +45,16 @@ func PublishHomeAssistantAvailability(c mqtt.Client, zone config.Zone) mqtt.Toke
 }
 
 func PublishHomeAssistantState(c mqtt.Client, zone config.Zone) (mqtt.Token, error) {
+
+	moistureLevel, err := zone.AverageMoistureLevel()
+
+	if err != nil {
+		return nil, err
+	}
+
 	state := homeassistant.ZoneState{}
 	state.State = "on" // TODO
-	state.MoistureLevel = world.MoistureLevel{
-		Percentage: 66, // TODO
-	}
+	state.MoistureLevel = moistureLevel
 
 	json, err := json.Marshal(state)
 

@@ -167,22 +167,9 @@ func readMoistureLevels(ard arduino.Arduino, app *config.Application) {
 				return
 			}
 		}
-	}()func (z Zone) GetHomeAssistantHumidifierConfiguration() homeassistant.HumidifierConfiguration {
-		c := homeassistant.NewZoneHumidifierConfiguration()
-		c.ObjectId = z.GetHomeAssistantObjectId()
-		c.UniqueId = z.GetHomeAssistantObjectId()
-		c.Name = z.Name
-		c.StateTopic = z.GetHomeAssistantStateTopic()
-		c.CommandTopic = z.GetHomeAssistantCommandTopic()
-		c.TargetHumidityTopic = z.GetHomeAssistantTargetHumidityTopic()
-		c.TargetHumidityStateTopic = z.GetHomeAssistantTargetStateHumidityTopic()
-		c.AvailabilityTopic = z.GetHomeAssistantAvailabilityTopic()
-		c.ModeStateTopic = z.GetHomeAssistantModeStateTopic()
-		c.ModeCommandTopic = z.GetHomeAssistantModeCommandTopic()
-		c.Device = z.GetHomeAssistantDeviceDetails()
-	
-		return c
-	}
+	}()
+}
+
 func processMoistureReadings(app *config.Application, readings []arduino.MoistureReading) {
 	for _, zone := range app.Zones {
 		for _, sensor := range zone.MoistureSensors {
@@ -197,7 +184,6 @@ func processMoistureReadings(app *config.Application, readings []arduino.Moistur
 				mqtt.PublishHomeAssistantState(mqttClient, *zone)
 				mqtt.PublishHomeAssistantAvailability(mqttClient, *zone)
 				mqtt.PublishHomeAssistantTargetHumidity(mqttClient, *zone)
-				mqtt.PublishHomeAssistantModeState(mqttClient, *zone)
 			}
 		}
 	}
