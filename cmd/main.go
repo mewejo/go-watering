@@ -1,7 +1,16 @@
 package main
 
-import "github.com/mewejo/go-watering/pkg/app"
+import (
+	"log"
+
+	"github.com/joho/godotenv"
+	"github.com/mewejo/go-watering/pkg/app"
+)
 
 func main() {
-	app.Start()
+	if godotenv.Load() != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	app.Make().Run()
 }
