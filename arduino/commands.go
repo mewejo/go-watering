@@ -14,4 +14,5 @@ const (
 	WATER_4_ON       Command = "i"
 	WATER_4_OFF      Command = "j"
 	REQUEST_READINGS Command = "k"
+	REQUEST_OUTLETS  Command = "l"
 )
