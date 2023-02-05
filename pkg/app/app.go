@@ -1,9 +1,14 @@
 package app
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/mewejo/go-watering/pkg/model"
+)
 
 type App struct {
-	//
+	Zones        []model.Zone
+	WaterOutlets []model.WaterOutlet
 }
 
 func (app *App) Run() {
@@ -38,6 +43,6 @@ func (app *App) Run() {
 
 }
 
-func Make() *App {
+func NewApp() *App {
 	return &App{}
 }
