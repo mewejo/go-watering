@@ -42,17 +42,15 @@ func (app *App) publishHassAutoDiscovery() error {
 		token.Wait()
 	}
 
+	for _, entity := range app.zones {
+		token, err := app.hass.PublishAutoDiscovery(entity)
+
+		if err != nil {
+			return err
+		}
+
+		token.Wait()
+	}
+
 	return nil
-
-	/*
-
-		for _, waterOutlet := range app.waterOutlets {
-			// TODO
-		}
-
-		for _, zone := range app.zones {
-			// TODO
-		}
-
-	*/
 }

@@ -17,3 +17,11 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 		WaterOutlets:    waterOutlets,
 	}
 }
+
+func (zone Zone) MqttTopic(device *HassDevice) string {
+	return "humidifier/" + device.Namespace + "/zone-" + zone.Id
+}
+
+func (zone Zone) AutoDiscoveryPayload(device *HassDevice) interface{} {
+	return makeZoneHassConfiguration(zone, device)
+}
