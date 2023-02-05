@@ -23,7 +23,7 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfigurat
 	c.UniqueId = c.ObjectId
 	c.StateTopic = "humidifier"
 	c.TargetMoistureTopic = "target_moisture"
-	c.AvailabilityTopic = device.AvailabilityTopic
+	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.StateValueTemplate = "{{ value_json.target }}"
 	c.PayloadAvailable = "online"
 	c.PayloadNotAvailable = "offline"

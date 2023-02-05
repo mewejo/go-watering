@@ -22,7 +22,7 @@ func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) wa
 	c.ObjectId = device.EntityPrefix + "outlet-" + outlet.IdAsString()
 	c.UniqueId = c.ObjectId
 	c.StateTopic = "state"
-	c.AvailabilityTopic = device.AvailabilityTopic
+	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.DeviceClass = "switch"
 	c.StateValueTemplate = "{{ value_json.target }}"
 	c.PayloadAvailable = "online"

@@ -20,7 +20,7 @@ func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevi
 	c.ObjectId = device.EntityPrefix + "sensor-" + sensor.IdAsString()
 	c.UniqueId = c.ObjectId
 	c.StateTopic = "state"
-	c.AvailabilityTopic = device.AvailabilityTopic
+	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.DeviceClass = "moisture"
 	c.StateValueTemplate = "{{ value_json.moisture.percentage }}"
 	c.UnitOfMeasurement = "%"

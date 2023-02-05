@@ -21,3 +21,7 @@ func NewHassDevice() *HassDevice {
 		AvailabilityTopic: "availability",
 	}
 }
+
+func (d HassDevice) GetFqAvailabilityTopic() string {
+	return d.Namespace + "/availability"
+}
