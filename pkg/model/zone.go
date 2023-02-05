@@ -1,15 +1,19 @@
 package model
 
 type Zone struct {
-	Id   uint
-	Name string
-	Mode *ZoneMode
+	Id              string
+	Name            string
+	Mode            *ZoneMode
+	MoistureSensors []*MoistureSensor
+	WaterOutlets    []*WaterOutlet
 }
 
-func NewZone(id uint, name string) *Zone {
+func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*WaterOutlet) *Zone {
 	return &Zone{
-		Id:   id,
-		Name: name,
-		Mode: getDefaultZoneMode(),
+		Id:              id,
+		Name:            name,
+		Mode:            getDefaultZoneMode(),
+		MoistureSensors: sensors,
+		WaterOutlets:    waterOutlets,
 	}
 }

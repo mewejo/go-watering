@@ -19,8 +19,10 @@ func (ms MoistureSensor) mapRawReadingToPercentage(raw uint) uint {
 	))
 }
 
-func MakeMoistureSensor() MoistureSensor {
+func MakeMoistureSensor(id uint, name string) MoistureSensor {
 	return MoistureSensor{
+		Id:           id,
+		Name:         name,
 		DryThreshold: 500,
 		WetThreshold: 240,
 	}
