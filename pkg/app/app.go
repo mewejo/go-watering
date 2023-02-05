@@ -103,20 +103,16 @@ func (app *App) publishHassAutoDiscovery() error {
 func (app *App) Run() {
 	app.configureHardware()
 
-	{
-		err := app.setupHass()
+	err := app.setupHass()
 
-		if err != nil {
-			panic(err)
-		}
+	if err != nil {
+		panic(err)
 	}
 
-	{
-		err := app.publishHassAutoDiscovery()
+	err = app.publishHassAutoDiscovery()
 
-		if err != nil {
-			panic(err)
-		}
+	if err != nil {
+		panic(err)
 	}
 
 	/*
