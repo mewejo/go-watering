@@ -75,8 +75,18 @@ func (app *App) setupHass() error {
 }
 
 func (app *App) publishHassAutoDiscovery() error {
-	for _, moistureSensor := range app.moistureSensors {
-		token, err := app.hass.PublishAutoDiscovery(moistureSensor)
+	for _, entity := range app.moistureSensors {
+		token, err := app.hass.PublishAutoDiscovery(entity)
+
+		if err != nil {
+			return err
+		}
+
+		token.Wait()
+	}
+
+	for _, entity := range app.waterOutlets {
+		token, err := app.hass.PublishAutoDiscovery(entity)
 
 		if err != nil {
 			return err

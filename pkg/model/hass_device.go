@@ -5,9 +5,9 @@ type HassDevice struct {
 	Name              string `json:"name"`
 	Model             string `json:"model"`
 	Manufacturer      string `json:"manufacturer"`
-	Namespace         string
-	EntityPrefix      string
-	AvailabilityTopic string
+	Namespace         string `json:"-"`
+	EntityPrefix      string `json:"-"`
+	AvailabilityTopic string `json:"-"`
 }
 
 func NewHassDevice() *HassDevice {
