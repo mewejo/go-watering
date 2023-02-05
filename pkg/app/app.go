@@ -1,8 +1,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/mewejo/go-watering/pkg/model"
 )
 
@@ -15,9 +13,9 @@ type App struct {
 func (app *App) configure() {
 
 	waterOutlet1 := model.NewWaterOutlet(1, "Soaker hose #1")
-	waterOutlet2 := model.NewWaterOutlet(1, "Soaker hose #2")
-	waterOutlet3 := model.NewWaterOutlet(1, "Soaker hose #3")
-	waterOutlet4 := model.NewWaterOutlet(1, "Soaker hose #4")
+	waterOutlet2 := model.NewWaterOutlet(2, "Soaker hose #2")
+	waterOutlet3 := model.NewWaterOutlet(3, "Soaker hose #3")
+	waterOutlet4 := model.NewWaterOutlet(4, "Soaker hose #4")
 
 	// The only outlet which isn't tied to a zone.
 	app.WaterOutlets = append(app.WaterOutlets, waterOutlet4)
@@ -59,8 +57,6 @@ func (app *App) configure() {
 }
 
 func (app *App) Run() {
-	fmt.Println("Bonsoir, Elliot")
-
 	app.configure()
 
 	/*
