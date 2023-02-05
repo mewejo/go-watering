@@ -14,13 +14,13 @@ type MoistureReading struct {
 }
 
 func (r *MoistureReading) CalculateMoistureLevelForSensor(sensor MoistureSensor) {
-	r.MoistureLevel = NewMoistureLevel(
+	r.MoistureLevel = MakeMoistureLevel(
 		sensor.mapRawReadingToPercentage(r.raw),
 	)
 }
 
 // Returns the reading, the sensor ID and an error
-func NewMoistureReadingFromString(line string) (MoistureReading, uint, error) {
+func MakeMoistureReadingFromString(line string) (MoistureReading, uint, error) {
 	// MS:1:700:44 # MS:ID:RAW:PERCENTAGE
 	parts := strings.Split(line, ":")
 

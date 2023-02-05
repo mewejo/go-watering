@@ -4,7 +4,7 @@ type MoistureLevel struct {
 	Percentage uint `json:"percentage"`
 }
 
-func NewMoistureLevel(percentage uint) MoistureLevel {
+func MakeMoistureLevel(percentage uint) MoistureLevel {
 	return MoistureLevel{
 		Percentage: percentage,
 	}
