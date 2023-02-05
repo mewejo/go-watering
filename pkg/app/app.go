@@ -1,16 +1,20 @@
 package app
 
 import (
+	"os"
+
+	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
 )
 
 type App struct {
-	Zones           []*model.Zone
-	WaterOutlets    []*model.WaterOutlet
-	MoistureSensors []*model.MoistureSensor
+	zones           []*model.Zone
+	waterOutlets    []*model.WaterOutlet
+	moistureSensors []*model.MoistureSensor
+	hass            *hass.HassClient
 }
 
-func (app *App) configure() {
+func (app *App) configureHardware() {
 
 	waterOutlet1 := model.NewWaterOutlet(1, "Soaker hose #1")
 	waterOutlet2 := model.NewWaterOutlet(2, "Soaker hose #2")
@@ -18,7 +22,7 @@ func (app *App) configure() {
 	waterOutlet4 := model.NewWaterOutlet(4, "Soaker hose #4")
 
 	// The only outlet which isn't tied to a zone.
-	app.WaterOutlets = append(app.WaterOutlets, waterOutlet4)
+	app.waterOutlets = append(app.waterOutlets, waterOutlet4)
 
 	moistureSensor1 := model.MakeMoistureSensor(1, "Sensor #1")
 	moistureSensor2 := model.MakeMoistureSensor(2, "Sensor #2")
@@ -27,28 +31,28 @@ func (app *App) configure() {
 	moistureSensor5 := model.MakeMoistureSensor(5, "Sensor #5")
 	moistureSensor6 := model.MakeMoistureSensor(6, "Sensor #6")
 
-	app.MoistureSensors = append(app.MoistureSensors, &moistureSensor1)
-	app.MoistureSensors = append(app.MoistureSensors, &moistureSensor2)
-	app.MoistureSensors = append(app.MoistureSensors, &moistureSensor3)
-	app.MoistureSensors = append(app.MoistureSensors, &moistureSensor4)
-	app.MoistureSensors = append(app.MoistureSensors, &moistureSensor5)
-	app.MoistureSensors = append(app.MoistureSensors, &moistureSensor6)
+	app.moistureSensors = append(app.moistureSensors, &moistureSensor1)
+	app.moistureSensors = append(app.moistureSensors, &moistureSensor2)
+	app.moistureSensors = append(app.moistureSensors, &moistureSensor3)
+	app.moistureSensors = append(app.moistureSensors, &moistureSensor4)
+	app.moistureSensors = append(app.moistureSensors, &moistureSensor5)
+	app.moistureSensors = append(app.moistureSensors, &moistureSensor6)
 
-	app.Zones = append(app.Zones, model.NewZone(
+	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-1",
 		"Raised Bed #1",
 		[]*model.MoistureSensor{&moistureSensor1, &moistureSensor2},
 		[]*model.WaterOutlet{waterOutlet1},
 	))
 
-	app.Zones = append(app.Zones, model.NewZone(
+	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-2",
 		"Raised Bed #2",
 		[]*model.MoistureSensor{&moistureSensor3, &moistureSensor4},
 		[]*model.WaterOutlet{waterOutlet2},
 	))
 
-	app.Zones = append(app.Zones, model.NewZone(
+	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-3",
 		"Raised Bed #3",
 		[]*model.MoistureSensor{&moistureSensor5, &moistureSensor6},
@@ -56,8 +60,64 @@ func (app *App) configure() {
 	))
 }
 
+func (app *App) setupHass() error {
+
+	hassDevice := model.NewHassDevice()
+
+	app.hass = hass.NewClient(
+		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX")+"/",
+		hassDevice,
+	)
+
+	return app.hass.Connect(
+		hass.MakeMqttMessage("vegetable-soaker/availability", "unavailable"), // TODO veg soaker + unavail should be constants/generated/configurable
+	)
+}
+
+func (app *App) publishHassAutoDiscovery() error {
+	for _, moistureSensor := range app.moistureSensors {
+		token, err := app.hass.PublishAutoDiscovery(moistureSensor)
+
+		if err != nil {
+			return err
+		}
+
+		token.Wait()
+	}
+
+	return nil
+
+	/*
+
+		for _, waterOutlet := range app.waterOutlets {
+			// TODO
+		}
+
+		for _, zone := range app.zones {
+			// TODO
+		}
+
+	*/
+}
+
 func (app *App) Run() {
-	app.configure()
+	app.configureHardware()
+
+	{
+		err := app.setupHass()
+
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	{
+		err := app.publishHassAutoDiscovery()
+
+		if err != nil {
+			panic(err)
+		}
+	}
 
 	/*
 		Make zone configurations

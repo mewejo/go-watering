@@ -1,12 +1,28 @@
 package model
 
-import "github.com/mewejo/go-watering/pkg/number"
+import (
+	"strconv"
+
+	"github.com/mewejo/go-watering/pkg/number"
+)
 
 type MoistureSensor struct {
 	Id           uint
 	Name         string
 	DryThreshold uint
 	WetThreshold uint
+}
+
+func (ms MoistureSensor) AutoDiscoveryTopic() string {
+	return "sensor/vegetable-soaker/sensor-" + ms.IdAsString()
+}
+
+func (ms MoistureSensor) AutoDiscoveryPayload(device *HassDevice) interface{} {
+	return makeMoistureSensorHassConfiguration(ms, device)
+}
+
+func (ms MoistureSensor) IdAsString() string {
+	return strconv.FormatUint(uint64(ms.Id), 10)
 }
 
 func (ms MoistureSensor) mapRawReadingToPercentage(raw uint) uint {
