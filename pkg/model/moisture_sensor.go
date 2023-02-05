@@ -13,7 +13,7 @@ type MoistureSensor struct {
 	WetThreshold uint
 }
 
-func (ms MoistureSensor) EntityTopic(device *HassDevice) string {
+func (ms MoistureSensor) MqttTopic(device *HassDevice) string {
 	return "sensor/" + device.Namespace + "/sensor-" + ms.IdAsString()
 }
 

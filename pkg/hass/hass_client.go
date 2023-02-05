@@ -40,7 +40,7 @@ func (c *HassClient) PublishAutoDiscovery(entity model.HassAutoDiscoverable) (mq
 	}
 
 	return c.Publish(MakeMqttMessage(
-		entity.EntityTopic(c.device)+"/config",
+		entity.MqttTopic(c.device)+"/config",
 		string(json),
 	)), nil
 }
