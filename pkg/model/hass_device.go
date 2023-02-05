@@ -5,6 +5,7 @@ type HassDevice struct {
 	Name         string `json:"name"`
 	Model        string `json:"model"`
 	Manufacturer string `json:"manufacturer"`
+	Namespace    string
 }
 
 func NewHassDevice() *HassDevice {
@@ -13,5 +14,6 @@ func NewHassDevice() *HassDevice {
 		Name:         "Vegatable Soaker",
 		Model:        "vegetable-soaker",
 		Manufacturer: "Josh Bonfield",
+		Namespace:    "vegetable-soaker",
 	}
 }

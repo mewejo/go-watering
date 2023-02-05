@@ -65,7 +65,7 @@ func (app *App) setupHass() error {
 	hassDevice := model.NewHassDevice()
 
 	app.hass = hass.NewClient(
-		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX")+"/",
+		os.Getenv("HOME_ASSISTANT_DISCOVERY_PREFIX"),
 		hassDevice,
 	)
 

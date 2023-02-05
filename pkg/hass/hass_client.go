@@ -31,20 +31,27 @@ func (c *HassClient) defaultMessageHandler(msg mqtt.Message) {
 
 func (c *HassClient) PublishAutoDiscovery(entity model.HassAutoDiscoverable) (mqtt.Token, error) {
 
-	json, err := json.Marshal(entity.AutoDiscoveryPayload(c.device))
+	json, err := json.Marshal(
+		entity.AutoDiscoveryPayload(c.device),
+	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(string(json))
-
-	return c.client.Publish(
-		c.namespace+entity.AutoDiscoveryTopic()+"/config",
-		0,
-		false,
+	return c.Publish(MakeMqttMessage(
+		entity.AutoDiscoveryTopic(c.device)+"/config",
 		string(json),
-	), nil
+	)), nil
+}
+
+func (c *HassClient) Publish(message MqttMessage) mqtt.Token {
+	return c.client.Publish(
+		c.namespace+"/"+message.topic,
+		message.qos,
+		message.retain,
+		message.payload,
+	)
 }
 
 func (c *HassClient) Disconnect() {
