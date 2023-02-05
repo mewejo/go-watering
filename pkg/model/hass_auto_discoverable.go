@@ -1,6 +1,6 @@
 package model
 
 type HassAutoDiscoverable interface {
-	AutoDiscoveryTopic(device *HassDevice) string
+	EntityTopic(device *HassDevice) string
 	AutoDiscoveryPayload(device *HassDevice) interface{}
 }

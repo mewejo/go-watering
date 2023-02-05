@@ -13,7 +13,7 @@ type MoistureSensor struct {
 	WetThreshold uint
 }
 
-func (ms MoistureSensor) AutoDiscoveryTopic(device *HassDevice) string {
+func (ms MoistureSensor) EntityTopic(device *HassDevice) string {
 	return "sensor/" + device.Namespace + "/sensor-" + ms.IdAsString()
 }
 

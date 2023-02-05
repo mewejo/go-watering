@@ -70,7 +70,7 @@ func (app *App) setupHass() error {
 	)
 
 	return app.hass.Connect(
-		hass.MakeMqttMessage("vegetable-soaker/availability", "unavailable"), // TODO veg soaker + unavail should be constants/generated/configurable
+		hass.MakeMqttMessage(hassDevice.Namespace+"/availability", "unavailable"), // TODO veg soaker + unavail should be constants/generated/configurable
 	)
 }
 

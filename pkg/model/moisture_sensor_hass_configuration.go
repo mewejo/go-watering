@@ -17,10 +17,10 @@ type moistureSensorHassConfiguration struct {
 func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevice) moistureSensorHassConfiguration {
 	c := moistureSensorHassConfiguration{}
 	c.Name = sensor.Name
-	c.ObjectId = "vegetable-soaker-sensor-" + sensor.IdAsString()
+	c.ObjectId = device.EntityPrefix + "sensor-" + sensor.IdAsString()
 	c.UniqueId = c.ObjectId
-	c.StateTopic = "state"        // TODO
-	c.AvailabilityTopic = "state" // TODO
+	c.StateTopic = "state"
+	c.AvailabilityTopic = device.AvailabilityTopic
 	c.DeviceClass = "moisture"
 	c.StateValueTemplate = "{{ value_json.moisture.percentage }}"
 	c.UnitOfMeasurement = "%"
