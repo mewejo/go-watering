@@ -24,6 +24,6 @@ func (wo WaterOutlet) MqttTopic(device *HassDevice) string {
 	return "switch/" + device.Namespace + "/outlet-" + wo.IdAsString()
 }
 
-func (wo WaterOutlet) AutoDiscoveryPayload(device *HassDevice) interface{} {
+func (wo WaterOutlet) AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload {
 	return makeWaterOutletHassConfiguration(wo, device)
 }

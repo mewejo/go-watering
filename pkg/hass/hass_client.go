@@ -31,8 +31,10 @@ func (c *HassClient) defaultMessageHandler(msg mqtt.Message) {
 
 func (c *HassClient) PublishAutoDiscovery(entity model.HassAutoDiscoverable) (mqtt.Token, error) {
 
+	payload := entity.AutoDiscoveryPayload(c.device).WithGlobalTopicPrefix(c.namespace)
+
 	json, err := json.Marshal(
-		entity.AutoDiscoveryPayload(c.device),
+		payload,
 	)
 
 	if err != nil {

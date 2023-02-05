@@ -2,5 +2,5 @@ package model
 
 type HassAutoDiscoverable interface {
 	MqttTopic(device *HassDevice) string
-	AutoDiscoveryPayload(device *HassDevice) interface{}
+	AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload
 }

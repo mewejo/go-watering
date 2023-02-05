@@ -16,7 +16,12 @@ type waterOutletHassConfiguration struct {
 	StateOff            string      `json:"state_off"`
 }
 
-func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) waterOutletHassConfiguration {
+func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string) HassAutoDiscoverPayload {
+	c.AvailabilityTopic = prefix + "/" + c.AvailabilityTopic
+	return c
+}
+
+func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) HassAutoDiscoverPayload {
 	c := waterOutletHassConfiguration{}
 	c.Name = outlet.Name
 	c.ObjectId = device.EntityPrefix + "outlet-" + outlet.IdAsString()

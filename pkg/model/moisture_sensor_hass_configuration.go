@@ -14,7 +14,12 @@ type moistureSensorHassConfiguration struct {
 	PayloadNotAvailable string      `json:"payload_not_available"`
 }
 
-func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevice) moistureSensorHassConfiguration {
+func (c moistureSensorHassConfiguration) WithGlobalTopicPrefix(prefix string) HassAutoDiscoverPayload {
+	c.AvailabilityTopic = prefix + "/" + c.AvailabilityTopic
+	return c
+}
+
+func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevice) HassAutoDiscoverPayload {
 	c := moistureSensorHassConfiguration{}
 	c.Name = sensor.Name
 	c.ObjectId = device.EntityPrefix + "sensor-" + sensor.IdAsString()

@@ -17,7 +17,7 @@ func (ms MoistureSensor) MqttTopic(device *HassDevice) string {
 	return "sensor/" + device.Namespace + "/sensor-" + ms.IdAsString()
 }
 
-func (ms MoistureSensor) AutoDiscoveryPayload(device *HassDevice) interface{} {
+func (ms MoistureSensor) AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload {
 	return makeMoistureSensorHassConfiguration(ms, device)
 }
 
