@@ -31,7 +31,7 @@ func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) wa
 	c.StateTopic = "state"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.DeviceClass = "switch"
-	c.StateValueTemplate = "{{ value_json.actual ? 'on' : 'off' }}"
+	c.StateValueTemplate = "{% if value_json.actual -%}on{%- else -%}off{%- endif %}"
 	c.PayloadAvailable = device.PayloadAvailable
 	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device
