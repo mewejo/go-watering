@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 
@@ -59,7 +60,13 @@ func (app *App) startSendingMoistureSensorReadings() chan bool {
 
 	sendSensorStates := func() {
 		for _, sensor := range app.moistureSensors {
-			go app.publishMoistureSensorState(sensor)
+			go func(sensor *model.MoistureSensor) {
+				err := app.publishMoistureSensorState(sensor)
+
+				if err != nil {
+					fmt.Println("Error: " + err.Error())
+				}
+			}(sensor)
 		}
 	}
 
