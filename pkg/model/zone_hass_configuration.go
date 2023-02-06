@@ -13,8 +13,8 @@ type zoneHassConfiguration struct {
 	PayloadAvailable    string      `json:"payload_available"`
 	PayloadNotAvailable string      `json:"payload_not_available"`
 	CommandTopic        string      `json:"command_topic"`
-	StateOn             string      `json:"state_on"`
-	StateOff            string      `json:"state_off"`
+	StateOn             string      `json:"payload_on"`
+	StateOff            string      `json:"payload_off"`
 	TargetMoistureTopic string      `json:"target_humidity_command_topic"`
 	Modes               []string    `json:"modes"`
 	ModeCommandTopic    string      `json:"mode_command_topic"`
