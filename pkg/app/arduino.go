@@ -70,7 +70,7 @@ func (app *App) startSendingWaterStatesToArduino() chan bool {
 }
 
 func (app *App) startRequestingWaterOutletStates() chan bool {
-	ticker := time.NewTicker(2 * time.Second)
+	ticker := time.NewTicker(500 * time.Millisecond)
 
 	quit := make(chan bool)
 
