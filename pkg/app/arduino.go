@@ -89,6 +89,26 @@ func (app *App) startRequestingWaterOutletStates() chan bool {
 	return quit
 }
 
+func (app *App) startRequestingMoistureSensorReadings() chan bool {
+	ticker := time.NewTicker(1 * time.Second)
+
+	quit := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				app.arduino.SendCommand(arduino.REQUEST_READINGS)
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	return quit
+}
+
 func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 
 	handleHeartbeat := func(hb model.ArduinoHeartbeat) {

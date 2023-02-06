@@ -49,6 +49,7 @@ func (app *App) Run() {
 
 	closeArduinoChan, arduinoInputChan := app.initialiseArduino()
 	stopRequestingOutletStatesChan := app.startRequestingWaterOutletStates()
+	stopRequestingMoistureSensorReadingsChan := app.startRequestingMoistureSensorReadings()
 	stopSendingOutletStatesToArduinoChan := app.startSendingWaterStatesToArduino()
 	app.listenForWaterOutletCommands()
 
@@ -57,8 +58,9 @@ func (app *App) Run() {
 	{
 		<-osExit
 		close(stopRequestingOutletStatesChan)
-		close(closeArduinoChan)
 		close(stopSendingOutletStatesToArduinoChan)
+		close(stopRequestingMoistureSensorReadingsChan)
+		close(closeArduinoChan)
 		app.markHassNotAvailable()
 		app.hass.Disconnect()
 		os.Exit(0)
