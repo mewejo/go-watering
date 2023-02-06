@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Zone struct {
 	Id                         string
@@ -40,6 +43,12 @@ func (zone *Zone) SetWaterOutletsState(state bool) {
 	zone.WaterOutletsState = state
 
 	if changing {
+		if state {
+			fmt.Println("Turning ON water for zone: " + zone.Name)
+		} else {
+			fmt.Println("Turning OFF water for zone: " + zone.Name)
+		}
+
 		zone.WaterOutletsStateChangedAt = time.Now()
 	}
 }
