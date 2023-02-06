@@ -1,6 +1,8 @@
 package app
 
 import (
+	"time"
+
 	"github.com/mewejo/go-watering/pkg/arduino"
 	"github.com/mewejo/go-watering/pkg/model"
 	"github.com/mewejo/go-watering/pkg/persistence"
@@ -42,6 +44,26 @@ func (app *App) initialiseArduino() (chan bool, <-chan string) {
 	}()
 
 	return closeChan, dataChan
+}
+
+func (app *App) startRequestingWaterOutletStates() chan bool {
+	ticker := time.NewTicker(2 * time.Second)
+
+	quit := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				app.arduino.SendCommand(arduino.REQUEST_OUTLETS)
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	return quit
 }
 
 func (app *App) handleArduinoDataInput(dataChan <-chan string) {
