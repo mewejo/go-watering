@@ -64,16 +64,22 @@ func (app *App) startHassAvailabilityTimer() chan bool {
 
 	quit := make(chan bool)
 
+	sendAvailableMessage := func() {
+		app.hass.Publish(
+			hass.MakeMqttMessage(
+				app.hassDevice.GetFqAvailabilityTopic(),
+				app.hassDevice.PayloadAvailable,
+			),
+		)
+	}
+
+	sendAvailableMessage()
+
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
-				app.hass.Publish(
-					hass.MakeMqttMessage(
-						app.hassDevice.GetFqAvailabilityTopic(),
-						app.hassDevice.PayloadAvailable,
-					),
-				)
+				sendAvailableMessage()
 
 			case <-quit:
 				ticker.Stop()

@@ -2,6 +2,7 @@ package arduino
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/mewejo/go-watering/pkg/model"
@@ -44,6 +45,9 @@ func (a *Arduino) SetWaterOutletState(outlet *model.WaterOutlet) {
 }
 
 func (a Arduino) SendCommand(command Command) (int, error) {
+	fmt.Print("Sending command: ")
+	fmt.Println(command)
+
 	return a.port.Write([]byte(command))
 }
 
