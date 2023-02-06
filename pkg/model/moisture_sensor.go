@@ -34,13 +34,19 @@ func (ms MoistureSensor) IdAsString() string {
 }
 
 func (ms MoistureSensor) mapRawReadingToPercentage(raw uint) uint {
-	return uint(number.ChangeRange(
+	value := number.ChangeRange(
 		float64(raw),
 		float64(ms.DryThreshold),
 		float64(ms.WetThreshold),
 		0,
 		100,
-	))
+	)
+
+	if value < 0 {
+		value = 0
+	}
+
+	return uint(value)
 }
 
 func NewMoistureSensor(id uint, name string) *MoistureSensor {
