@@ -48,15 +48,17 @@ func (app *App) Run() {
 	osExit := app.setupCloseHandler()
 
 	closeArduinoChan, arduinoInputChan := app.initialiseArduino()
-	stopRestingOutletStatesChan := app.startRequestingWaterOutletStates()
+	stopRequestingOutletStatesChan := app.startRequestingWaterOutletStates()
+	stopSendingOutletStatesToArduinoChan := app.startSendingWaterStatesToArduino()
 	app.listenForWaterOutletCommands()
 
 	go app.handleArduinoDataInput(arduinoInputChan)
 
 	{
 		<-osExit
-		close(stopRestingOutletStatesChan)
+		close(stopRequestingOutletStatesChan)
 		close(closeArduinoChan)
+		close(stopSendingOutletStatesToArduinoChan)
 		app.markHassNotAvailable()
 		app.hass.Disconnect()
 		os.Exit(0)

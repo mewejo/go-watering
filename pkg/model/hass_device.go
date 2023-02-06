@@ -15,7 +15,7 @@ type HassDevice struct {
 func NewHassDevice() *HassDevice {
 	return &HassDevice{
 		Identifier:          "vegetable-soaker",
-		Name:                "Vegatable Soaker",
+		Name:                "Vegetable Soaker",
 		Model:               "VegSoak 3000",
 		Manufacturer:        "Josh Bonfield",
 		Namespace:           "vegetable-soaker",

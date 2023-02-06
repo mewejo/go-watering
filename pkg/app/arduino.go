@@ -47,6 +47,28 @@ func (app *App) initialiseArduino() (chan bool, <-chan string) {
 	return closeChan, dataChan
 }
 
+func (app *App) startSendingWaterStatesToArduino() chan bool {
+	ticker := time.NewTicker(1 * time.Second)
+
+	quit := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				for _, outlet := range app.waterOutlets {
+					go app.arduino.SetWaterOutletState(outlet)
+				}
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	return quit
+}
+
 func (app *App) startRequestingWaterOutletStates() chan bool {
 	ticker := time.NewTicker(2 * time.Second)
 
