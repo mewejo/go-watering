@@ -14,7 +14,7 @@ type moistureReadingStore struct {
 
 func (s *moistureReadingStore) recordReading(r model.MoistureReading) {
 	s.readings = append(s.readings, r)
-	limitReadings(&s.readings, 1000)
+	//limitReadings(&s.readings, 1000)
 }
 
 func (s *moistureReadingStore) getLatest() (*model.MoistureReading, error) {
