@@ -16,6 +16,7 @@ type zoneHassConfiguration struct {
 	StateOn             string      `json:"state_on"`
 	StateOff            string      `json:"state_off"`
 	TargetMoistureTopic string      `json:"target_humidity_command_topic"`
+	Modes               []string    `json:"modes"`
 }
 
 func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
@@ -38,6 +39,10 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) HassAutoDiscoverPa
 	c.CommandTopic = "command"
 	c.StateOn = constants.HASS_STATE_ON
 	c.StateOff = constants.HASS_STATE_OFF
+
+	for _, mode := range zoneModes {
+		c.Modes = append(c.Modes, mode.Key)
+	}
 
 	return c
 }
