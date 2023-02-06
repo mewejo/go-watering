@@ -15,7 +15,7 @@ func newZoneAverageMoistureSensor(zone *Zone) *ZoneAverageMoistureSensor {
 }
 
 func (sensor ZoneAverageMoistureSensor) OverriddenMqttStateTopic(device *HassDevice) string {
-	return sensor.Zone.MqttTopic(device)
+	return sensor.Zone.MqttStateTopic(device)
 }
 
 func (sensor ZoneAverageMoistureSensor) MqttTopic(device *HassDevice) string {
