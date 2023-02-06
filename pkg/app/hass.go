@@ -25,6 +25,8 @@ func (app *App) listenForWaterOutletCommands() {
 				} else if string(message.Payload()) == constants.HASS_STATE_OFF {
 					outlet.TargetState = false
 				}
+
+				app.arduino.SetWaterOutletState(outlet)
 			},
 		)
 	}

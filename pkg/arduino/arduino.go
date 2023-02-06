@@ -13,6 +13,36 @@ type Arduino struct {
 	LastHeartbeat *model.ArduinoHeartbeat
 }
 
+func (a *Arduino) SetWaterOutletState(outlet *model.WaterOutlet) {
+	var command Command
+
+	if outlet.TargetState {
+		switch outlet.Id {
+		case 1:
+			command = WATER_1_ON
+		case 2:
+			command = WATER_2_ON
+		case 3:
+			command = WATER_3_ON
+		case 4:
+			command = WATER_4_ON
+		}
+	} else {
+		switch outlet.Id {
+		case 1:
+			command = WATER_1_OFF
+		case 2:
+			command = WATER_2_OFF
+		case 3:
+			command = WATER_3_OFF
+		case 4:
+			command = WATER_4_OFF
+		}
+	}
+
+	a.SendCommand(command)
+}
+
 func (a Arduino) SendCommand(command Command) (int, error) {
 	return a.port.Write([]byte(command))
 }
