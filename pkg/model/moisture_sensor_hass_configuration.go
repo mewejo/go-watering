@@ -12,6 +12,7 @@ type moistureSensorHassConfiguration struct {
 	HassDevice          *HassDevice `json:"device"`
 	PayloadAvailable    string      `json:"payload_available"`
 	PayloadNotAvailable string      `json:"payload_not_available"`
+	MqttRetain          bool        `json:"retain"`
 }
 
 func (c moistureSensorHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
@@ -46,6 +47,7 @@ func makeMoistureSensorConfiugurationForDevice(device *HassDevice) moistureSenso
 	c.PayloadAvailable = device.PayloadAvailable
 	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device
+	c.MqttRetain = false
 
 	return c
 }

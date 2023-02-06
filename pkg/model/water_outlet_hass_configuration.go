@@ -16,6 +16,7 @@ type waterOutletHassConfiguration struct {
 	CommandTopic        string      `json:"command_topic"`
 	StateOn             string      `json:"payload_on"`
 	StateOff            string      `json:"payload_off"`
+	MqttRetain          bool        `json:"retain"`
 }
 
 func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
@@ -47,6 +48,7 @@ func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) wa
 	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device
 	c.CommandTopic = "command"
+	c.MqttRetain = true
 
 	return c
 }

@@ -18,8 +18,8 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 		Mode:            getDefaultZoneMode(),
 		MoistureSensors: sensors,
 		WaterOutlets:    waterOutlets,
-		Enabled:         true,
-		TargetMoisture:  MakeMoistureLevel(50), // TODO set to zero on boot?
+		Enabled:         false,
+		TargetMoisture:  MakeMoistureLevel(0),
 	}
 
 	zone.AverageMoistureSensor = newZoneAverageMoistureSensor(zone)
