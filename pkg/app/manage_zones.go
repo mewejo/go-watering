@@ -1,6 +1,7 @@
 package app
 
 import (
+	"log"
 	"time"
 
 	"github.com/mewejo/go-watering/pkg/model"
@@ -13,7 +14,10 @@ func (app *App) regulateZones() chan bool {
 	quit := make(chan bool)
 
 	handleZone := func(zone *model.Zone) {
-		app.regulateZone(zone)
+		if err := app.regulateZone(zone); err != nil {
+			log.Println(err)
+		}
+
 		app.ensureZoneWaterOutletState(zone)
 	}
 
