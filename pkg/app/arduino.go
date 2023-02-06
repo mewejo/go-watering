@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/mewejo/go-watering/pkg/arduino"
@@ -128,6 +129,14 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 	}
 
 	handleMoistureReading := func(reading model.MoistureReading, sensorId uint) {
+		if app.debug {
+			log.Printf(
+				"Sensor ID %d - Raw value: %d",
+				sensorId,
+				reading.Raw,
+			)
+		}
+
 		persistence.RecordMoistureReading(sensorId, reading)
 	}
 

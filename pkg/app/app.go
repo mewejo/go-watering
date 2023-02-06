@@ -17,6 +17,7 @@ type App struct {
 	hass            *hass.HassClient
 	hassDevice      *model.HassDevice
 	arduino         *arduino.Arduino
+	debug           bool
 }
 
 func (app *App) setupCloseHandler() <-chan os.Signal {
@@ -28,6 +29,8 @@ func (app *App) setupCloseHandler() <-chan os.Signal {
 }
 
 func (app *App) Run() {
+
+	app.debug = os.Getenv("debug") == "true"
 
 	app.configureHardware()
 

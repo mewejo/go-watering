@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -43,12 +42,6 @@ func (zone *Zone) SetWaterOutletsState(state bool) {
 	zone.WaterOutletsState = state
 
 	if changing {
-		if state {
-			fmt.Println("Turning ON water for zone: " + zone.Name)
-		} else {
-			fmt.Println("Turning OFF water for zone: " + zone.Name)
-		}
-
 		zone.WaterOutletsStateChangedAt = time.Now()
 	}
 }
