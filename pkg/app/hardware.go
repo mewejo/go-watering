@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 
@@ -57,8 +56,6 @@ func (app *App) configureHardware() {
 
 			moistureSensor.WetThreshold = uint(threshold)
 		}
-
-		fmt.Println(moistureSensor)
 	}
 
 	app.zones = append(app.zones, model.NewZone(
