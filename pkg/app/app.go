@@ -1,10 +1,12 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
 )
@@ -51,7 +53,9 @@ func (app *App) Run() {
 
 	osExit := app.setupCloseHandler()
 
-	//app.hass.Subscribe("")
+	app.hass.Subscribe("switch/vegetable-soaker/outlet-4/command", func(m mqtt.Message) {
+		fmt.Println(string(m.Payload()))
+	})
 
 	{
 		<-osExit
