@@ -81,10 +81,10 @@ func (app *App) Run() {
 		os.Exit(code)
 	}
 
-	{
-		<-osExit
+	select {
+	case <-osExit:
 		doExit(0)
-		<-arduinoHeartbeatStoppedChan
+	case <-arduinoHeartbeatStoppedChan:
 		log.Println("did not receive heartbeat from Arduino in time")
 		doExit(1)
 	}

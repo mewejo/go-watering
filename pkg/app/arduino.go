@@ -20,14 +20,12 @@ func (app *App) monitorArduinoHeartbeat() (<-chan bool, chan bool) {
 			select {
 			case <-ticker.C:
 				if app.arduino.LastHeartbeat.Time.IsZero() {
-					log.Println("no hb available..")
 					continue
 				}
 
 				cutOff := time.Now().Add(-time.Millisecond)
 
 				if app.arduino.LastHeartbeat.Time.Before(cutOff) {
-					log.Println("dead")
 					deadArduino <- true
 					return
 				}
