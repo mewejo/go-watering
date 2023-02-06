@@ -185,7 +185,7 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 	for line := range dataChan {
 		heartbeat, err := model.MakeArduinoHeartbeatFromString(line)
 
-		log.Println(err)
+		log.Println(err.Error() + ": " + line)
 
 		if err == nil {
 			go handleHeartbeat(heartbeat)
