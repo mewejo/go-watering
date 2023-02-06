@@ -51,7 +51,33 @@ func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
 	return nil
 }
 
-func (app *App) startSendingMoistureSensorReadings() chan bool {
+func (app *App) sendZoneStateToHas(zone *model.Zone) {
+	// TODO
+}
+
+func (app *App) startSendingZoneStateToHass() chan bool {
+	ticker := time.NewTicker(1 * time.Second)
+
+	quit := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				for _, zone := range app.zones {
+					go app.sendZoneStateToHas(zone)
+				}
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	return quit
+}
+
+func (app *App) startSendingMoistureSensorReadingsToHass() chan bool {
 
 	ticker := time.NewTicker(5 * time.Second)
 
@@ -59,7 +85,7 @@ func (app *App) startSendingMoistureSensorReadings() chan bool {
 
 	sendSensorStates := func() {
 		for _, sensor := range app.moistureSensors {
-			go app.publishMoistureSensorState(sensor)
+			go app.publishMoistureSensorStateToHass(sensor)
 		}
 	}
 
@@ -79,7 +105,7 @@ func (app *App) startSendingMoistureSensorReadings() chan bool {
 	return quit
 }
 
-func (app *App) publishMoistureSensorState(sensor *model.MoistureSensor) error {
+func (app *App) publishMoistureSensorStateToHass(sensor *model.MoistureSensor) error {
 
 	moistureLevel, err := persistence.GetAverageReadingForSince(sensor.Id, 2*time.Minute)
 

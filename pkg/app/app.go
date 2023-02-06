@@ -51,7 +51,9 @@ func (app *App) Run() {
 	stopRequestingOutletStatesChan := app.startRequestingWaterOutletStates()
 	stopRequestingMoistureSensorReadingsChan := app.startRequestingMoistureSensorReadings()
 	stopSendingOutletStatesToArduinoChan := app.startSendingWaterStatesToArduino()
-	stopSendingMoistureSensorReadingsChan := app.startSendingMoistureSensorReadings()
+	stopSendingMoistureSensorReadingsToHassChan := app.startSendingMoistureSensorReadingsToHass()
+	stopSendingZoneStatesToHassChan := app.startSendingZoneStateToHass()
+
 	app.listenForWaterOutletCommands()
 
 	go app.handleArduinoDataInput(arduinoInputChan)
@@ -61,8 +63,9 @@ func (app *App) Run() {
 		close(stopRequestingOutletStatesChan)
 		close(stopSendingOutletStatesToArduinoChan)
 		close(stopRequestingMoistureSensorReadingsChan)
-		close(stopSendingMoistureSensorReadingsChan)
+		close(stopSendingMoistureSensorReadingsToHassChan)
 		close(closeArduinoChan)
+		close(stopSendingZoneStatesToHassChan)
 		app.markHassNotAvailable()
 		app.hass.Disconnect()
 		os.Exit(0)
