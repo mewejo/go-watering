@@ -55,6 +55,7 @@ func (app *App) Run() {
 	stopSendingZoneStatesToHassChan := app.startSendingZoneStateToHass()
 
 	app.listenForWaterOutletCommands()
+	app.listenForZoneCommands()
 
 	go app.handleArduinoDataInput(arduinoInputChan)
 
