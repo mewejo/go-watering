@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/mewejo/go-watering/pkg/arduino"
 	"github.com/mewejo/go-watering/pkg/model"
+	"github.com/mewejo/go-watering/pkg/persistence"
 )
 
 func (app *App) initialiseArduino() (chan bool, <-chan string) {
@@ -50,11 +51,11 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 	}
 
 	handleMoistureReading := func(reading model.MoistureReading, sensorId uint) {
-
+		persistence.RecordMoistureReading(sensorId, reading)
 	}
 
 	handleWaterOutletState := func(outletId uint, realState bool, setState bool) {
-
+		// TODO
 	}
 
 	for line := range dataChan {

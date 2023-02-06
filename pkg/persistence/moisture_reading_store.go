@@ -5,7 +5,7 @@ import (
 )
 
 type moistureReadingStore struct {
-	sensor   model.MoistureSensor
+	sensorId uint
 	readings []model.MoistureReading
 }
 
@@ -24,19 +24,19 @@ func limitReadings(s *[]model.MoistureReading, length int) {
 
 var moistureReadingStores []moistureReadingStore
 
-func RecordMoistureReading(sensor model.MoistureSensor, reading model.MoistureReading) {
-	getOrMakeStore(sensor).recordReading(reading)
+func RecordMoistureReading(sensorId uint, reading model.MoistureReading) {
+	getOrMakeStore(sensorId).recordReading(reading)
 }
 
-func getOrMakeStore(sensor model.MoistureSensor) *moistureReadingStore {
+func getOrMakeStore(sensorId uint) *moistureReadingStore {
 	for _, store := range moistureReadingStores {
-		if store.sensor.Id == sensor.Id {
+		if store.sensorId == sensorId {
 			return &store
 		}
 	}
 
 	store := moistureReadingStore{
-		sensor: sensor,
+		sensorId: sensorId,
 	}
 
 	moistureReadingStores = append(moistureReadingStores, store)
