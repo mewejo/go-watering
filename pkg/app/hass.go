@@ -13,11 +13,8 @@ import (
 )
 
 func (app *App) listenForWaterOutletCommands() {
-	for _, outlet := range app.waterOutlets {
-		if !outlet.IndependentlyControlled {
-			continue
-		}
 
+	subscribe := func(outlet *model.WaterOutlet) {
 		app.hass.Subscribe(
 			outlet.MqttCommandTopic(app.hassDevice),
 			func(message mqtt.Message) {
@@ -30,6 +27,14 @@ func (app *App) listenForWaterOutletCommands() {
 				app.arduino.SetWaterOutletState(outlet)
 			},
 		)
+	}
+
+	for _, outlet := range app.waterOutlets {
+		if !outlet.IndependentlyControlled {
+			continue
+		}
+
+		subscribe(outlet)
 	}
 }
 
