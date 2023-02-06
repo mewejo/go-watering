@@ -1,6 +1,7 @@
 package app
 
 import (
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -84,6 +85,7 @@ func (app *App) Run() {
 		<-osExit
 		doExit(0)
 		<-arduinoHeartbeatStoppedChan
+		log.Println("did not receive heartbeat from Arduino in time")
 		doExit(1)
 	}
 
