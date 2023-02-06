@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/mewejo/go-watering/pkg/model"
 )
@@ -40,6 +41,7 @@ func GetLatestReadingForMoistureSensorId(sensorId uint) (*model.MoistureReading,
 
 func RecordMoistureReading(sensorId uint, reading model.MoistureReading) {
 	getOrMakeStore(sensorId).recordReading(reading)
+	fmt.Println(GetLatestReadingForMoistureSensorId(sensorId))
 }
 
 func getOrMakeStore(sensorId uint) *moistureReadingStore {
