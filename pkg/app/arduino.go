@@ -20,6 +20,7 @@ func (app *App) monitorArduinoHeartbeat() (<-chan bool, chan bool) {
 			select {
 			case <-ticker.C:
 				if app.arduino.LastHeartbeat.Time.IsZero() {
+					log.Println("no hb available..")
 					continue
 				}
 
