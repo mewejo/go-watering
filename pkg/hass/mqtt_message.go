@@ -13,3 +13,13 @@ func MakeMqttMessage(topic string, payload string) MqttMessage {
 		payload: payload,
 	}
 }
+
+func (m MqttMessage) Retained() MqttMessage {
+	m.retain = true
+	return m
+}
+
+func (m MqttMessage) Qos(qos byte) MqttMessage {
+	m.qos = qos
+	return m
+}

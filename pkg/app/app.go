@@ -44,6 +44,7 @@ func (app *App) Run() {
 	}
 
 	app.startHassAvailabilityTimer()
+	app.sendInitialZoneModesToHass()
 
 	osExit := app.setupCloseHandler()
 

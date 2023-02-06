@@ -109,6 +109,21 @@ func (app *App) sendWaterOutletStateToHass(outlet *model.WaterOutlet) error {
 	return nil
 }
 
+func (app *App) sendInitialZoneModesToHass() {
+	for _, zone := range app.zones {
+		app.sendZoneModeCommandToHass(zone, model.GetDefaultZoneMode())
+	}
+}
+
+func (app *App) sendZoneModeCommandToHass(zone *model.Zone, mode *model.ZoneMode) {
+	app.hass.Publish(
+		hass.MakeMqttMessage(
+			zone.MqttModeCommandTopic(app.hassDevice),
+			mode.Key,
+		).Retained().Qos(2),
+	)
+}
+
 func (app *App) sendZoneStateToHass(zone *model.Zone) error {
 
 	average, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
