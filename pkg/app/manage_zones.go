@@ -46,18 +46,22 @@ func (app *App) regulateZone(zone *model.Zone) error {
 		return nil
 	}
 
-	averageMoisture, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
+	if zone.Mode.Key == "normal" {
+		averageMoisture, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
 
-	if err != nil {
-		return err
-	}
+		if err != nil {
+			return err
+		}
 
-	if averageMoisture.Percentage < zone.TargetMoisture.Percentage {
-		zone.SetWaterOutletsState(true)
-		return nil
-	} else if averageMoisture.Percentage > zone.TargetMoisture.Percentage {
-		zone.SetWaterOutletsState(false)
-		return nil
+		var hysteresis uint = 5
+
+		if averageMoisture.Percentage < (zone.TargetMoisture.Percentage - hysteresis) {
+			zone.SetWaterOutletsState(true)
+			return nil
+		} else if averageMoisture.Percentage > (zone.TargetMoisture.Percentage + hysteresis) {
+			zone.SetWaterOutletsState(false)
+			return nil
+		}
 	}
 
 	return nil
