@@ -61,6 +61,7 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 			}
 
 			outlet.ActualState = actualState
+			app.publishWaterOutletState(outlet)
 		}
 	}
 

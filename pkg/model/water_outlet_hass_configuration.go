@@ -22,7 +22,7 @@ func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string, devic
 	return c
 }
 
-func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) HassAutoDiscoverPayload {
+func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) waterOutletHassConfiguration {
 	c := waterOutletHassConfiguration{}
 	c.Name = outlet.Name
 	c.ObjectId = device.EntityPrefix + "outlet-" + outlet.IdAsString()
@@ -30,7 +30,7 @@ func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) Ha
 	c.StateTopic = "state"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.DeviceClass = "switch"
-	c.StateValueTemplate = "{{ value_json.target }}"
+	c.StateValueTemplate = "{{ value_json.actual ? 'on' : 'off' }}"
 	c.PayloadAvailable = device.PayloadAvailable
 	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device

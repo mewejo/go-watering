@@ -7,11 +7,11 @@ import (
 )
 
 type WaterOutlet struct {
-	Id                      uint
-	Name                    string
-	TargetState             bool
-	ActualState             bool
-	IndependentlyControlled bool
+	Id                      uint   `json:"id"`
+	Name                    string `json:"name"`
+	TargetState             bool   `json:"target"`
+	ActualState             bool   `json:"actual"`
+	IndependentlyControlled bool   `json:"independently_controlled"`
 }
 
 func NewWaterOutlet(id uint, name string, independentlyControlled bool) *WaterOutlet {
@@ -28,6 +28,10 @@ func (wo WaterOutlet) IdAsString() string {
 
 func (wo WaterOutlet) MqttTopic(device *HassDevice) string {
 	return "switch/" + device.Namespace + "/outlet-" + wo.IdAsString()
+}
+
+func (wo WaterOutlet) MqttStateTopic(device *HassDevice) string {
+	return wo.MqttTopic(device) + "/" + makeWaterOutletHassConfiguration(wo, device).StateTopic
 }
 
 func (wo WaterOutlet) AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload {

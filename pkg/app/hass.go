@@ -1,12 +1,31 @@
 package app
 
 import (
+	"encoding/json"
 	"os"
 	"time"
 
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
 )
+
+func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
+
+	payload, err := json.Marshal(outlet)
+
+	if err != nil {
+		return err
+	}
+
+	app.hass.Publish(
+		hass.MakeMqttMessage(
+			outlet.MqttStateTopic(app.hassDevice),
+			string(payload),
+		),
+	)
+
+	return nil
+}
 
 func (app *App) markHassNotAvailable() {
 	app.hass.Publish(
