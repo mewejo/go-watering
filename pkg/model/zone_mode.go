@@ -7,8 +7,8 @@ import (
 )
 
 type ZoneMode struct {
-	Key            string `json:"key"`
-	CutOffDuration time.Duration
+	Key            string        `json:"key"`
+	CutOffDuration time.Duration `json:"-"`
 }
 
 const normalMode = "normal"
