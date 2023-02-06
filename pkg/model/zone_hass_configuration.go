@@ -33,6 +33,8 @@ func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *Hass
 func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfiguration {
 	c := zoneHassConfiguration{}
 	c.Name = zone.Name
+	c.StateOn = constants.HASS_STATE_ON
+	c.StateOff = constants.HASS_STATE_OFF
 	c.ObjectId = device.EntityPrefix + "zone-" + zone.Id
 	c.UniqueId = c.ObjectId
 	c.StateTopic = "state"
@@ -45,8 +47,6 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfigurat
 	c.CommandTopic = "command"
 	c.ModeCommandTopic = "mode_command"
 	c.ModeStateTopic = "mode"
-	c.StateOn = constants.HASS_STATE_ON
-	c.StateOff = constants.HASS_STATE_OFF
 
 	for _, mode := range zoneModes {
 		c.Modes = append(c.Modes, mode.Key)
