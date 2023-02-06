@@ -4,8 +4,24 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/mewejo/go-watering/pkg/arduino"
 	"github.com/mewejo/go-watering/pkg/model"
 )
+
+// Set the states and immediately call the Arduino to action it
+func (app *App) forceSetAllWaterOutletStates(state bool) {
+	for _, outlet := range app.waterOutlets {
+		outlet.TargetState = state // So they don't somehow get changed, as we're using the bulk command
+
+		// Using the bulk command to do it quickly.
+		// If this method is used, it's likely on shut down
+		if state {
+			app.arduino.SendCommand(arduino.WATER_ON)
+		} else {
+			app.arduino.SendCommand(arduino.WATER_OFF)
+		}
+	}
+}
 
 func (app *App) configureHardware() {
 

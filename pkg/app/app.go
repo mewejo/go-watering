@@ -67,6 +67,7 @@ func (app *App) Run() {
 	{
 		<-osExit
 		close(stopRequestingOutletStatesChan)
+		app.forceSetAllWaterOutletStates(false)
 		close(stopSendingOutletStatesToArduinoChan)
 		close(stopRequestingMoistureSensorReadingsChan)
 		close(stopSendingMoistureSensorReadingsToHassChan)
