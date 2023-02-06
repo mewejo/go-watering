@@ -71,12 +71,15 @@ func (app *App) regulateZone(zone *model.Zone) error {
 			return err
 		}
 
-		var hysteresis uint = 5
+		var hysteresis int = 5
 
-		if averageMoisture.Percentage < (zone.TargetMoisture.Percentage - hysteresis) {
+		averageMoisturePercent := int(averageMoisture.Percentage)
+		targetMoisturePercent := int(zone.TargetMoisture.Percentage)
+
+		if averageMoisturePercent < (targetMoisturePercent - hysteresis) {
 			zone.SetWaterOutletsState(true)
 			return nil
-		} else if averageMoisture.Percentage > (zone.TargetMoisture.Percentage + hysteresis) {
+		} else if averageMoisturePercent > (targetMoisturePercent + hysteresis) {
 			zone.SetWaterOutletsState(false)
 			return nil
 		}
