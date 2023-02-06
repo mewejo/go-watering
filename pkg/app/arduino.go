@@ -19,7 +19,12 @@ func (app *App) monitorArduinoHeartbeat() (<-chan bool, chan bool) {
 		for {
 			select {
 			case <-ticker.C:
+				if app.arduino.LastHeartbeat.Time.IsZero() {
+					continue
+				}
+
 				cutOff := time.Now().Add(-time.Millisecond)
+
 				if app.arduino.LastHeartbeat.Time.Before(cutOff) {
 					deadArduino <- true
 					return
