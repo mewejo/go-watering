@@ -1,6 +1,12 @@
 package app
 
-import "github.com/mewejo/go-watering/pkg/model"
+import (
+	"fmt"
+	"os"
+	"strconv"
+
+	"github.com/mewejo/go-watering/pkg/model"
+)
 
 func (app *App) configureHardware() {
 
@@ -27,6 +33,33 @@ func (app *App) configureHardware() {
 	app.moistureSensors = append(app.moistureSensors, moistureSensor4)
 	app.moistureSensors = append(app.moistureSensors, moistureSensor5)
 	app.moistureSensors = append(app.moistureSensors, moistureSensor6)
+
+	for _, moistureSensor := range app.moistureSensors {
+		dryThreshold := os.Getenv("MOISTURE_SENSOR_" + moistureSensor.IdAsString() + "_DRY")
+		wetThreshold := os.Getenv("MOISTURE_SENSOR_" + moistureSensor.IdAsString() + "_WET")
+
+		if dryThreshold != "" {
+			threshold, err := strconv.Atoi(dryThreshold)
+
+			if err != nil {
+				panic("could not get dry threshold for sensor ID " + moistureSensor.IdAsString() + ": " + err.Error())
+			}
+
+			moistureSensor.DryThreshold = uint(threshold)
+		}
+
+		if wetThreshold != "" {
+			threshold, err := strconv.Atoi(wetThreshold)
+
+			if err != nil {
+				panic("could not get wet threshold for sensor ID " + moistureSensor.IdAsString() + ": " + err.Error())
+			}
+
+			moistureSensor.WetThreshold = uint(threshold)
+		}
+
+		fmt.Println(moistureSensor)
+	}
 
 	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-1",
