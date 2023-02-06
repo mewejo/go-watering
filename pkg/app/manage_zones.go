@@ -50,16 +50,7 @@ func (app *App) preventZoneFlooding(zone *model.Zone) {
 		return
 	}
 
-	var cutoffDuration time.Duration
-
-	if zone.Mode.Key == "boost" {
-		cutoffDuration = time.Minute * 30
-	} else {
-		// Assume normal mode. Forces a recalculation after the water being on continuously for an hour.
-		cutoffDuration = time.Hour
-	}
-
-	cutoff := time.Now().Add(-cutoffDuration)
+	cutoff := time.Now().Add(-zone.Mode.CutOffDuration)
 
 	if zone.WaterOutletsStateChangedAt.Before(cutoff) {
 		zone.Mode = model.GetDefaultZoneMode()
@@ -73,7 +64,7 @@ func (app *App) regulateZone(zone *model.Zone) error {
 		return nil
 	}
 
-	if zone.Mode.Key == "normal" {
+	if zone.Mode == model.GetDefaultZoneMode() {
 		averageMoisture, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
 
 		if err != nil {
@@ -92,7 +83,7 @@ func (app *App) regulateZone(zone *model.Zone) error {
 			zone.SetWaterOutletsState(false)
 			return nil
 		}
-	} else if zone.Mode.Key == "boost" {
+	} else {
 		zone.SetWaterOutletsState(true)
 	}
 

@@ -3,32 +3,40 @@ package model
 import (
 	"errors"
 	"log"
+	"time"
 )
 
 type ZoneMode struct {
-	Name string `json:"name"`
-	Key  string `json:"key"`
+	Key            string `json:"key"`
+	CutOffDuration time.Duration
 }
+
+const normalMode = "normal"
 
 var zoneModes = []*ZoneMode{
 	{
-		Name: "Normal",
-		Key:  "normal",
+		Key:            normalMode,
+		CutOffDuration: time.Minute * 30,
 	},
 
 	{
-		Name: "Boost",
-		Key:  "boost",
+		Key:            "15 Minute Boost",
+		CutOffDuration: time.Minute * 15,
 	},
 
 	{
-		Name: "Boost 1 hour",
-		Key:  "Boost 1 hour",
+		Key:            "30 Minute Boost",
+		CutOffDuration: time.Minute * 30,
+	},
+
+	{
+		Key:            "1 hour Boost",
+		CutOffDuration: time.Hour,
 	},
 }
 
 func GetDefaultZoneMode() *ZoneMode {
-	mode, err := GetZoneModeFromKey("normal")
+	mode, err := GetZoneModeFromKey(normalMode)
 
 	if err != nil {
 		log.Fatal(err)
