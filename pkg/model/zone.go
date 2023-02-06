@@ -27,6 +27,12 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 	return zone
 }
 
+func (zone *Zone) SetWaterOutletState(state bool) {
+	for _, outlet := range zone.WaterOutlets {
+		outlet.TargetState = state
+	}
+}
+
 func (zone Zone) MqttTopic(device *HassDevice) string {
 	return "humidifier/" + device.Namespace + "/zone-" + zone.Id
 }

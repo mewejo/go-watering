@@ -53,6 +53,7 @@ func (app *App) Run() {
 	stopSendingOutletStatesToArduinoChan := app.startSendingWaterStatesToArduino()
 	stopSendingMoistureSensorReadingsToHassChan := app.startSendingMoistureSensorReadingsToHass()
 	stopSendingZoneStatesToHassChan := app.startSendingZoneStateToHass()
+	stopRegulatingZonesChan := app.regulateZones()
 
 	app.listenForWaterOutletCommands()
 	app.listenForZoneCommands()
@@ -67,6 +68,7 @@ func (app *App) Run() {
 		close(stopSendingMoistureSensorReadingsToHassChan)
 		close(closeArduinoChan)
 		close(stopSendingZoneStatesToHassChan)
+		close(stopRegulatingZonesChan)
 		app.markHassNotAvailable()
 		app.hass.Disconnect()
 		os.Exit(0)
