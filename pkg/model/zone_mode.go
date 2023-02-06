@@ -22,7 +22,7 @@ var zoneModes = []*ZoneMode{
 	},
 }
 
-func getDefaultZoneMode() *ZoneMode {
+func GetDefaultZoneMode() *ZoneMode {
 	mode, err := GetZoneModeFromKey("normal")
 
 	if err != nil {

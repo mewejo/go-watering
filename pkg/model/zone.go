@@ -19,7 +19,7 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 	zone := &Zone{
 		Id:                         id,
 		Name:                       name,
-		Mode:                       getDefaultZoneMode(),
+		Mode:                       GetDefaultZoneMode(),
 		MoistureSensors:            sensors,
 		WaterOutlets:               waterOutlets,
 		Enabled:                    false,

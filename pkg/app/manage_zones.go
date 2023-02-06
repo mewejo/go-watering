@@ -53,6 +53,7 @@ func (app *App) preventZoneFlooding(zone *model.Zone) {
 	cutoff := time.Now().Add(-(time.Minute * 30))
 
 	if zone.WaterOutletsStateChangedAt.Before(cutoff) {
+		zone.Mode = model.GetDefaultZoneMode()
 		zone.SetWaterOutletsState(false)
 	}
 }
