@@ -29,7 +29,7 @@ func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *Hass
 	return c
 }
 
-func makeZoneHassConfiguration(zone Zone, device *HassDevice) HassAutoDiscoverPayload {
+func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfiguration {
 	c := zoneHassConfiguration{}
 	c.Name = zone.Name
 	c.ObjectId = device.EntityPrefix + "zone-" + zone.Id

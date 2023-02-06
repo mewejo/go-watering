@@ -67,8 +67,30 @@ func GetLatestReadingForMoistureSensorId(sensorId uint) (*model.MoistureReading,
 	return getOrMakeStore(sensorId).getLatest()
 }
 
-func GetAverageReadingForSince(sensorId uint, since time.Duration) (model.MoistureLevel, error) {
+func GetAverageReadingForSensorIdSince(sensorId uint, since time.Duration) (model.MoistureLevel, error) {
 	return getOrMakeStore(sensorId).getAverageSince(since)
+}
+
+func GetAverageReadingForSensorsSince(sensors []*model.MoistureSensor, since time.Duration) (model.MoistureLevel, error) {
+	if len(sensors) < 1 {
+		return model.MoistureLevel{}, errors.New("no sensors provided")
+	}
+
+	var totalPercentage uint
+
+	for _, sensor := range sensors {
+		level, err := getOrMakeStore(sensor.Id).getAverageSince(since)
+
+		if err != nil {
+			return model.MoistureLevel{}, err
+		}
+
+		totalPercentage += level.Percentage
+	}
+
+	return model.MakeMoistureLevel(
+		uint(totalPercentage / uint(len(sensors))),
+	), nil
 }
 
 func RecordMoistureReading(sensorId uint, reading model.MoistureReading) {

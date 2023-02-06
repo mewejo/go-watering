@@ -6,8 +6,8 @@ import (
 )
 
 type ZoneMode struct {
-	Name string
-	Key  string
+	Name string `json:"name"`
+	Key  string `json:"key"`
 }
 
 var zoneModes = []*ZoneMode{

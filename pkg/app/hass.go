@@ -51,8 +51,34 @@ func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
 	return nil
 }
 
-func (app *App) sendZoneStateToHas(zone *model.Zone) {
-	// TODO
+func (app *App) sendZoneStateToHas(zone *model.Zone) error {
+
+	average, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
+
+	if err != nil {
+		return err
+	}
+
+	state := model.MakeZoneHassState(
+		zone.Mode,
+		average,
+	)
+
+	payload, err := json.Marshal(state)
+
+	if err != nil {
+		return err
+	}
+
+	app.hass.Publish(
+		hass.MakeMqttMessage(
+			zone.MqttStateTopic(app.hassDevice),
+			string(payload),
+		),
+	)
+
+	return nil
+
 }
 
 func (app *App) startSendingZoneStateToHass() chan bool {
@@ -107,7 +133,7 @@ func (app *App) startSendingMoistureSensorReadingsToHass() chan bool {
 
 func (app *App) publishMoistureSensorStateToHass(sensor *model.MoistureSensor) error {
 
-	moistureLevel, err := persistence.GetAverageReadingForSince(sensor.Id, 2*time.Minute)
+	moistureLevel, err := persistence.GetAverageReadingForSensorIdSince(sensor.Id, 2*time.Minute)
 
 	if err != nil {
 		return err
