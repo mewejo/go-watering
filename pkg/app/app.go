@@ -1,6 +1,10 @@
 package app
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
 )
@@ -10,6 +14,22 @@ type App struct {
 	waterOutlets    []*model.WaterOutlet
 	moistureSensors []*model.MoistureSensor
 	hass            *hass.HassClient
+	hassDevice      *model.HassDevice
+}
+
+func (app *App) setupCloseHandler() chan bool {
+	exitChan := make(chan bool)
+	sigChan := make(chan os.Signal)
+
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		<-sigChan
+		app.markHassNotAvailable()
+		exitChan <- true
+	}()
+
+	return exitChan
 }
 
 func (app *App) Run() {
@@ -25,6 +45,15 @@ func (app *App) Run() {
 
 	if err != nil {
 		panic(err)
+	}
+
+	app.startAvailabilityTimer()
+
+	osExit := app.setupCloseHandler()
+
+	{
+		<-osExit
+		os.Exit(0)
 	}
 
 	/*

@@ -31,7 +31,7 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) HassAutoDiscoverPa
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.StateValueTemplate = "{{ value_json.target }}"
 	c.PayloadAvailable = device.PayloadAvailable
-	c.PayloadNotAvailable = device.PayloadNotAailable
+	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device
 	c.CommandTopic = "command"
 	c.StateOn = "on"

@@ -73,7 +73,7 @@ func (c *HassClient) Connect(lwt MqttMessage) error {
 
 	opts := mqtt.NewClientOptions()
 	opts.AddBroker(connectionString)
-	opts.SetWill(c.namespace+lwt.topic, lwt.payload, lwt.qos, lwt.retain)
+	opts.SetWill(c.namespace+"/"+lwt.topic, lwt.payload, lwt.qos, lwt.retain)
 	opts.SetClientID(os.Getenv("MQTT_CLIENT_ID"))
 	opts.SetUsername(os.Getenv("MQTT_USERNAME"))
 	opts.SetPassword(os.Getenv("MQTT_PASSWORD"))
