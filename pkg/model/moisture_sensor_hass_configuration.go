@@ -29,8 +29,8 @@ func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevi
 	c.DeviceClass = "moisture"
 	c.StateValueTemplate = "{{ value_json.moisture.percentage }}"
 	c.UnitOfMeasurement = "%"
-	c.PayloadAvailable = "online"
-	c.PayloadNotAvailable = "offline"
+	c.PayloadAvailable = device.PayloadAvailable
+	c.PayloadNotAvailable = device.PayloadNotAailable
 	c.HassDevice = device
 
 	return c

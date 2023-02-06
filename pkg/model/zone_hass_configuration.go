@@ -30,8 +30,8 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) HassAutoDiscoverPa
 	c.TargetMoistureTopic = "target_moisture"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.StateValueTemplate = "{{ value_json.target }}"
-	c.PayloadAvailable = "online"
-	c.PayloadNotAvailable = "offline"
+	c.PayloadAvailable = device.PayloadAvailable
+	c.PayloadNotAvailable = device.PayloadNotAailable
 	c.HassDevice = device
 	c.CommandTopic = "command"
 	c.StateOn = "on"

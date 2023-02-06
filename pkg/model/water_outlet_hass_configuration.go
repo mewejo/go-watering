@@ -30,8 +30,8 @@ func makeWaterOutletHassConfiguration(outlet WaterOutlet, device *HassDevice) Ha
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.DeviceClass = "switch"
 	c.StateValueTemplate = "{{ value_json.target }}"
-	c.PayloadAvailable = "online"
-	c.PayloadNotAvailable = "offline"
+	c.PayloadAvailable = device.PayloadAvailable
+	c.PayloadNotAvailable = device.PayloadNotAailable
 	c.HassDevice = device
 	c.CommandTopic = "command"
 	c.StateOn = "on"
