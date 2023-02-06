@@ -155,8 +155,7 @@ func (app *App) findMoistureSensorById(id uint) (*model.MoistureSensor, error) {
 func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 
 	handleHeartbeat := func(hb model.ArduinoHeartbeat) {
-		log.Println("recording heartbeat")
-		app.arduino.LastHeartbeat = &hb
+		app.arduino.LastHeartbeat = hb
 	}
 
 	handleMoistureReading := func(reading model.MoistureReading, sensorId uint) {
@@ -183,7 +182,6 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 	}
 
 	for line := range dataChan {
-		log.Println(line)
 		heartbeat, err := model.MakeArduinoHeartbeatFromString(line)
 
 		if err == nil {

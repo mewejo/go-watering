@@ -10,7 +10,7 @@ import (
 
 type Arduino struct {
 	port          serial.Port
-	LastHeartbeat *model.ArduinoHeartbeat
+	LastHeartbeat model.ArduinoHeartbeat
 }
 
 func (a *Arduino) SetWaterOutletState(outlet *model.WaterOutlet) {
@@ -130,6 +130,6 @@ func (a *Arduino) FindAndOpenPort() error {
 func NewArduino() *Arduino {
 
 	return &Arduino{
-		LastHeartbeat: &model.ArduinoHeartbeat{},
+		LastHeartbeat: model.ArduinoHeartbeat{},
 	}
 }
