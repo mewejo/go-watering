@@ -4,12 +4,14 @@ import "github.com/mewejo/go-watering/pkg/model"
 
 func (app *App) configureHardware() {
 
-	waterOutlet1 := model.NewWaterOutlet(1, "Soaker hose #1")
-	waterOutlet2 := model.NewWaterOutlet(2, "Soaker hose #2")
-	waterOutlet3 := model.NewWaterOutlet(3, "Soaker hose #3")
-	waterOutlet4 := model.NewWaterOutlet(4, "Soaker hose #4")
+	waterOutlet1 := model.NewWaterOutlet(1, "Soaker hose #1", false)
+	waterOutlet2 := model.NewWaterOutlet(2, "Soaker hose #2", false)
+	waterOutlet3 := model.NewWaterOutlet(3, "Soaker hose #3", false)
+	waterOutlet4 := model.NewWaterOutlet(4, "Soaker hose #4", true)
 
-	// The only outlet which isn't tied to a zone.
+	app.waterOutlets = append(app.waterOutlets, waterOutlet1)
+	app.waterOutlets = append(app.waterOutlets, waterOutlet2)
+	app.waterOutlets = append(app.waterOutlets, waterOutlet3)
 	app.waterOutlets = append(app.waterOutlets, waterOutlet4)
 
 	moistureSensor1 := model.MakeMoistureSensor(1, "Sensor #1")

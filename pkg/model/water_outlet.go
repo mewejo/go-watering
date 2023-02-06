@@ -7,16 +7,18 @@ import (
 )
 
 type WaterOutlet struct {
-	Id          uint
-	Name        string
-	TargetState bool
-	ActualState bool
+	Id                      uint
+	Name                    string
+	TargetState             bool
+	ActualState             bool
+	IndependentlyControlled bool
 }
 
-func NewWaterOutlet(id uint, name string) *WaterOutlet {
+func NewWaterOutlet(id uint, name string, independentlyControlled bool) *WaterOutlet {
 	return &WaterOutlet{
-		Id:   id,
-		Name: name,
+		Id:                      id,
+		Name:                    name,
+		IndependentlyControlled: independentlyControlled,
 	}
 }
 
@@ -46,20 +48,20 @@ func DecodeWaterOutletStateFromString(line string) (uint, bool, bool, error) {
 		return 0, false, false, err
 	}
 
-	realState, err := strconv.Atoi(parts[2])
+	actualState, err := strconv.Atoi(parts[2])
 
 	if err != nil {
 		return 0, false, false, err
 	}
 
-	setState, err := strconv.Atoi(parts[3])
+	targetState, err := strconv.Atoi(parts[3])
 
 	if err != nil {
 		return 0, false, false, err
 	}
 
 	return uint(outletId),
-		realState == 1,
-		setState == 1,
+		actualState == 1,
+		targetState == 1,
 		nil
 }

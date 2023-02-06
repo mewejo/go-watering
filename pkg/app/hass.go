@@ -69,6 +69,11 @@ func (app *App) publishHassAutoDiscovery() error {
 	}
 
 	for _, entity := range app.waterOutlets {
+
+		if !entity.IndependentlyControlled {
+			continue
+		}
+
 		token, err := app.hass.PublishAutoDiscovery(entity)
 
 		if err != nil {

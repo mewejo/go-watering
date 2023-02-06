@@ -54,8 +54,14 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 		persistence.RecordMoistureReading(sensorId, reading)
 	}
 
-	handleWaterOutletState := func(outletId uint, realState bool, setState bool) {
-		// TODO
+	handleWaterOutletState := func(outletId uint, actualState bool, targetState bool) {
+		for _, outlet := range app.waterOutlets {
+			if outlet.Id != outletId {
+				continue
+			}
+
+			outlet.ActualState = actualState
+		}
 	}
 
 	for line := range dataChan {
@@ -73,10 +79,10 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 			continue
 		}
 
-		outletId, realState, setState, err := model.DecodeWaterOutletStateFromString(line)
+		outletId, actualState, targetState, err := model.DecodeWaterOutletStateFromString(line)
 
 		if err == nil {
-			go handleWaterOutletState(outletId, realState, setState)
+			go handleWaterOutletState(outletId, actualState, targetState)
 			continue
 		}
 	}
