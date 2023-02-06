@@ -32,7 +32,7 @@ func limitReadings(s *[]model.MoistureReading, length int) {
 	*s = (*s)[len(*s)-length:]
 }
 
-var moistureReadingStores []moistureReadingStore
+var moistureReadingStores []*moistureReadingStore
 
 func GetLatestReadingForMoistureSensorId(sensorId uint) (*model.MoistureReading, error) {
 	return getOrMakeStore(sensorId).getLatest()
@@ -45,7 +45,7 @@ func RecordMoistureReading(sensorId uint, reading model.MoistureReading) {
 func getOrMakeStore(sensorId uint) *moistureReadingStore {
 	for _, store := range moistureReadingStores {
 		if store.sensorId == sensorId {
-			return &store
+			return store
 		}
 	}
 
@@ -53,7 +53,7 @@ func getOrMakeStore(sensorId uint) *moistureReadingStore {
 		sensorId: sensorId,
 	}
 
-	moistureReadingStores = append(moistureReadingStores, store)
+	moistureReadingStores = append(moistureReadingStores, &store)
 
 	return &store
 }
