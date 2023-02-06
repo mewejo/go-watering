@@ -10,6 +10,31 @@ import (
 	"github.com/mewejo/go-watering/pkg/persistence"
 )
 
+func (app *App) monitorArduinoHeartbeat() (<-chan bool, chan bool) {
+	ticker := time.NewTicker(1 * time.Second)
+	deadArduino := make(chan bool)
+	closeTimer := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				cutOff := time.Now().Add(-time.Minute)
+				if app.arduino.LastHeartbeat.Time.Before(cutOff) {
+					deadArduino <- true
+					return
+				}
+
+			case <-closeTimer:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	return deadArduino, closeTimer
+}
+
 func (app *App) initialiseArduino() (chan bool, <-chan string) {
 	app.arduino = arduino.NewArduino()
 

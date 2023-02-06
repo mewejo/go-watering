@@ -52,6 +52,7 @@ func (app *App) Run() {
 	osExit := app.setupCloseHandler()
 
 	closeArduinoChan, arduinoInputChan := app.initialiseArduino()
+	arduinoHeartbeatStoppedChan, stopMonitoringArduinoHeartbeatChan := app.monitorArduinoHeartbeat()
 	stopRequestingOutletStatesChan := app.startRequestingWaterOutletStates()
 	stopRequestingMoistureSensorReadingsChan := app.startRequestingMoistureSensorReadings()
 	stopSendingOutletStatesToArduinoChan := app.startSendingWaterStatesToArduino()
@@ -64,8 +65,8 @@ func (app *App) Run() {
 
 	go app.handleArduinoDataInput(arduinoInputChan)
 
-	{
-		<-osExit
+	doExit := func(code int) {
+		close(stopMonitoringArduinoHeartbeatChan)
 		close(stopRequestingOutletStatesChan)
 		app.forceSetAllWaterOutletStates(false)
 		close(stopSendingOutletStatesToArduinoChan)
@@ -76,7 +77,14 @@ func (app *App) Run() {
 		close(stopRegulatingZonesChan)
 		app.markHassNotAvailable()
 		app.hass.Disconnect()
-		os.Exit(0)
+		os.Exit(code)
+	}
+
+	{
+		<-osExit
+		doExit(0)
+		<-arduinoHeartbeatStoppedChan
+		doExit(1)
 	}
 
 	/*
