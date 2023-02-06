@@ -16,6 +16,7 @@ type moistureSensorHassConfiguration struct {
 
 func (c moistureSensorHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
 	c.AvailabilityTopic = prefix + "/" + c.HassDevice.GetFqAvailabilityTopic()
+	c.StateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.StateTopic
 	return c
 }
 
