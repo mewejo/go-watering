@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/mewejo/go-watering/pkg/model"
+	"github.com/mewejo/go-watering/pkg/persistence"
 )
 
 func (app *App) regulateZones() chan bool {
@@ -41,6 +42,20 @@ func (app *App) ensureZoneWaterOutletState(zone *model.Zone) {
 
 func (app *App) regulateZone(zone *model.Zone) error {
 	if !zone.Enabled {
+		zone.SetWaterOutletsState(false)
+		return nil
+	}
+
+	averageMoisture, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
+
+	if err != nil {
+		return err
+	}
+
+	if averageMoisture.Percentage < zone.TargetMoisture.Percentage {
+		zone.SetWaterOutletsState(true)
+		return nil
+	} else if averageMoisture.Percentage > zone.TargetMoisture.Percentage {
 		zone.SetWaterOutletsState(false)
 		return nil
 	}
