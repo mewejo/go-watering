@@ -15,9 +15,10 @@ func (app *App) regulateZones() chan bool {
 
 	handleZone := func(zone *model.Zone) {
 		if err := app.regulateZone(zone); err != nil {
-			log.Println(err)
+			log.Println("regulating zone " + zone.Name + ": " + err.Error())
 		}
 
+		app.preventZoneFlooding(zone)
 		app.ensureZoneWaterOutletState(zone)
 	}
 
@@ -44,6 +45,18 @@ func (app *App) ensureZoneWaterOutletState(zone *model.Zone) {
 	}
 }
 
+func (app *App) preventZoneFlooding(zone *model.Zone) {
+	if !zone.WaterOutletsState {
+		return
+	}
+
+	cutoff := time.Now().Add(-(time.Minute * 30))
+
+	if zone.WaterOutletsStateChangedAt.Before(cutoff) {
+		zone.SetWaterOutletsState(false)
+	}
+}
+
 func (app *App) regulateZone(zone *model.Zone) error {
 	if !zone.Enabled {
 		zone.SetWaterOutletsState(false)
@@ -66,6 +79,8 @@ func (app *App) regulateZone(zone *model.Zone) error {
 			zone.SetWaterOutletsState(false)
 			return nil
 		}
+	} else if zone.Mode.Key == "boost" {
+		zone.SetWaterOutletsState(true)
 	}
 
 	return nil
