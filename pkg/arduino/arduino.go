@@ -129,5 +129,7 @@ func (a *Arduino) FindAndOpenPort() error {
 
 func NewArduino() *Arduino {
 
-	return &Arduino{}
+	return &Arduino{
+		LastHeartbeat: &model.ArduinoHeartbeat{},
+	}
 }
