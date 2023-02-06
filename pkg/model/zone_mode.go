@@ -20,6 +20,11 @@ var zoneModes = []*ZoneMode{
 		Name: "Boost",
 		Key:  "boost",
 	},
+
+	{
+		Name: "Boost 1 hour",
+		Key:  "Boost 1 hour",
+	},
 }
 
 func GetDefaultZoneMode() *ZoneMode {
