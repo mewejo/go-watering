@@ -17,10 +17,15 @@ type zoneHassConfiguration struct {
 	StateOff            string      `json:"state_off"`
 	TargetMoistureTopic string      `json:"target_humidity_command_topic"`
 	Modes               []string    `json:"modes"`
+	ModeCommandTopic    string      `json:"mode_command_topic"`
+	ModeStateTopic      string      `json:"mode_state_topic"`
 }
 
 func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
 	c.AvailabilityTopic = prefix + "/" + c.HassDevice.GetFqAvailabilityTopic()
+	c.CommandTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.CommandTopic
+	c.ModeCommandTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.ModeCommandTopic
+	c.ModeStateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.ModeStateTopic
 	return c
 }
 
@@ -37,6 +42,8 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) HassAutoDiscoverPa
 	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device
 	c.CommandTopic = "command"
+	c.ModeCommandTopic = "mode_command"
+	c.ModeStateTopic = "mode"
 	c.StateOn = constants.HASS_STATE_ON
 	c.StateOff = constants.HASS_STATE_OFF
 
