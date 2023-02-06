@@ -42,7 +42,7 @@ func makeMoistureSensorConfiugurationForDevice(device *HassDevice) moistureSenso
 	c := moistureSensorHassConfiguration{}
 	c.StateTopic = "state"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
-	c.DeviceClass = "moisture"
+	c.DeviceClass = "humidity"
 	c.UnitOfMeasurement = "%"
 	c.PayloadAvailable = device.PayloadAvailable
 	c.PayloadNotAvailable = device.PayloadNotAvailable
