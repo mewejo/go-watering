@@ -34,6 +34,10 @@ func (wo WaterOutlet) MqttStateTopic(device *HassDevice) string {
 	return wo.MqttTopic(device) + "/" + makeWaterOutletHassConfiguration(wo, device).StateTopic
 }
 
+func (wo WaterOutlet) MqttCommandTopic(device *HassDevice) string {
+	return wo.MqttTopic(device) + "/" + makeWaterOutletHassConfiguration(wo, device).CommandTopic
+}
+
 func (wo WaterOutlet) AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload {
 	return makeWaterOutletHassConfiguration(wo, device)
 }

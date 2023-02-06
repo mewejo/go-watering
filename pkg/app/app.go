@@ -1,12 +1,10 @@
 package app
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mewejo/go-watering/pkg/arduino"
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
@@ -51,18 +49,16 @@ func (app *App) Run() {
 
 	closeArduinoChan, arduinoInputChan := app.initialiseArduino()
 	stopRestingOutletStatesChan := app.startRequestingWaterOutletStates()
+	app.listenForWaterOutletCommands()
 
 	go app.handleArduinoDataInput(arduinoInputChan)
 
-	app.hass.Subscribe("switch/vegetable-soaker/outlet-4/command", func(m mqtt.Message) {
-		fmt.Println(string(m.Payload()))
-	})
-
 	{
 		<-osExit
-		app.markHassNotAvailable()
 		close(stopRestingOutletStatesChan)
 		close(closeArduinoChan)
+		app.markHassNotAvailable()
+		app.hass.Disconnect()
 		os.Exit(0)
 	}
 

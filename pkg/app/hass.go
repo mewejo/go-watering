@@ -5,9 +5,30 @@ import (
 	"os"
 	"time"
 
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/mewejo/go-watering/pkg/constants"
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
 )
+
+func (app *App) listenForWaterOutletCommands() {
+	for _, outlet := range app.waterOutlets {
+		if !outlet.IndependentlyControlled {
+			continue
+		}
+
+		app.hass.Subscribe(
+			outlet.MqttCommandTopic(app.hassDevice),
+			func(message mqtt.Message) {
+				if string(message.Payload()) == constants.HASS_STATE_ON {
+					outlet.TargetState = true
+				} else if string(message.Payload()) == constants.HASS_STATE_OFF {
+					outlet.TargetState = false
+				}
+			},
+		)
+	}
+}
 
 func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
 
