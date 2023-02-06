@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/mewejo/go-watering/pkg/arduino"
@@ -88,6 +89,8 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 	}
 
 	for line := range dataChan {
+		fmt.Println(line)
+
 		heartbeat, err := model.MakeArduinoHeartbeatFromString(line)
 
 		if err == nil {
