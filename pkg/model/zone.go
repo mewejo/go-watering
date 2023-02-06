@@ -9,6 +9,7 @@ type Zone struct {
 	WaterOutlets          []*WaterOutlet
 	Enabled               bool
 	AverageMoistureSensor *ZoneAverageMoistureSensor
+	WaterOutletsOpen      bool
 }
 
 func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*WaterOutlet) *Zone {
@@ -25,12 +26,6 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 	zone.AverageMoistureSensor = newZoneAverageMoistureSensor(zone)
 
 	return zone
-}
-
-func (zone *Zone) SetWaterOutletState(state bool) {
-	for _, outlet := range zone.WaterOutlets {
-		outlet.TargetState = state
-	}
 }
 
 func (zone Zone) MqttTopic(device *HassDevice) string {
