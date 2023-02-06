@@ -30,7 +30,7 @@ func (app *App) setupCloseHandler() <-chan os.Signal {
 
 func (app *App) Run() {
 
-	app.debug = os.Getenv("debug") == "true"
+	app.debug = os.Getenv("APP_DEBUG") == "true"
 
 	app.configureHardware()
 
