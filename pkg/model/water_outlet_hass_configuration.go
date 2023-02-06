@@ -17,7 +17,7 @@ type waterOutletHassConfiguration struct {
 }
 
 func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string) HassAutoDiscoverPayload {
-	c.AvailabilityTopic = prefix + "/" + c.AvailabilityTopic
+	c.AvailabilityTopic = prefix + "/" + c.HassDevice.GetFqAvailabilityTopic()
 	return c
 }
 
