@@ -2,7 +2,6 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -27,7 +26,6 @@ func (app *App) monitorArduinoHeartbeat() (<-chan bool, chan bool) {
 				cutOff := time.Now().Add(-time.Millisecond)
 
 				if app.arduino.LastHeartbeat.Time.Before(cutOff) {
-					fmt.Println("dead ard")
 					deadArduino <- true
 					return
 				}
@@ -157,6 +155,7 @@ func (app *App) findMoistureSensorById(id uint) (*model.MoistureSensor, error) {
 func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 
 	handleHeartbeat := func(hb model.ArduinoHeartbeat) {
+		log.Println("recording heartbeat")
 		app.arduino.LastHeartbeat = &hb
 	}
 
