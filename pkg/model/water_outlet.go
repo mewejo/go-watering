@@ -59,7 +59,7 @@ func DecodeWaterOutletStateFromString(line string) (uint, bool, bool, error) {
 	}
 
 	return uint(outletId),
-		setState == 1,
 		realState == 1,
+		setState == 1,
 		nil
 }

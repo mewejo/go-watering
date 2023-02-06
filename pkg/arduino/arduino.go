@@ -3,15 +3,14 @@ package arduino
 import (
 	"errors"
 	"strings"
-	"time"
 
+	"github.com/mewejo/go-watering/pkg/model"
 	"go.bug.st/serial"
 )
 
 type Arduino struct {
-	port             serial.Port
-	heartbeatPayload string
-	LastHeartbeat    time.Time
+	port          serial.Port
+	LastHeartbeat *model.ArduinoHeartbeat
 }
 
 func (a Arduino) SendCommand(command Command) (int, error) {
@@ -100,7 +99,5 @@ func (a *Arduino) FindAndOpenPort() error {
 
 func NewArduino() *Arduino {
 
-	return &Arduino{
-		heartbeatPayload: "HEARTBEAT",
-	}
+	return &Arduino{}
 }
