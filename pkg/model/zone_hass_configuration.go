@@ -7,7 +7,7 @@ type zoneHassConfiguration struct {
 	ObjectId            string      `json:"object_id"`
 	UniqueId            string      `json:"unique_id"`
 	StateTopic          string      `json:"state_topic"`
-	StateValueTemplate  string      `json:"value_template"`
+	StateValueTemplate  string      `json:"state_value_template"`
 	AvailabilityTopic   string      `json:"availability_topic"`
 	HassDevice          *HassDevice `json:"device"`
 	PayloadAvailable    string      `json:"payload_available"`
