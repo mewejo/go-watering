@@ -22,6 +22,7 @@ type zoneHassConfiguration struct {
 	Modes                            []string    `json:"modes"`
 	ModeCommandTopic                 string      `json:"mode_command_topic"`
 	ModeStateTopic                   string      `json:"mode_state_topic"`
+	MqttRetain                       bool        `json:"retain"`
 }
 
 func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
@@ -62,6 +63,7 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfigurat
 	c.CommandTopic = "command"
 	c.ModeCommandTopic = "mode_command"
 	c.ModeStateTopic = "state"
+	c.MqttRetain = true
 
 	for _, mode := range zoneModes {
 		c.Modes = append(c.Modes, mode.Key)
