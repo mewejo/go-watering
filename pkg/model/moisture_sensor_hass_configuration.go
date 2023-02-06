@@ -30,7 +30,8 @@ func (c moistureSensorHassConfiguration) WithGlobalTopicPrefix(prefix string, de
 func makeMoistureSensorForZoneAverageMoistureSensor(averageMoistureSensor ZoneAverageMoistureSensor, device *HassDevice) moistureSensorHassConfiguration {
 	c := makeMoistureSensorConfiugurationForDevice(device)
 	c.Name = averageMoistureSensor.Name
-	c.ObjectId = device.EntityPrefix + "sensor-" + averageMoistureSensor.Id
+	c.ObjectId = device.EntityPrefix + "zone-average-sensor-" + averageMoistureSensor.Id
+	c.UniqueId = c.ObjectId
 	c.StateValueTemplate = "{{ value_json.average_moisture.percentage }}"
 
 	return c
@@ -38,7 +39,6 @@ func makeMoistureSensorForZoneAverageMoistureSensor(averageMoistureSensor ZoneAv
 
 func makeMoistureSensorConfiugurationForDevice(device *HassDevice) moistureSensorHassConfiguration {
 	c := moistureSensorHassConfiguration{}
-	c.UniqueId = c.ObjectId
 	c.StateTopic = "state"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.DeviceClass = "moisture"
@@ -54,6 +54,7 @@ func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevi
 	c := makeMoistureSensorConfiugurationForDevice(device)
 	c.Name = sensor.Name
 	c.ObjectId = device.EntityPrefix + "sensor-" + sensor.IdAsString()
+	c.UniqueId = c.ObjectId
 	c.StateValueTemplate = "{{ value_json.moisture_level.percentage }}"
 
 	return c
