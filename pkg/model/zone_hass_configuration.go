@@ -16,7 +16,7 @@ type zoneHassConfiguration struct {
 	TargetMoistureTopic string      `json:"target_humidity_command_topic"`
 }
 
-func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string) HassAutoDiscoverPayload {
+func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
 	c.AvailabilityTopic = prefix + "/" + c.HassDevice.GetFqAvailabilityTopic()
 	return c
 }

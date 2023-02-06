@@ -12,14 +12,14 @@ import (
 
 type HassClient struct {
 	client    mqtt.Client
-	namespace string // prefix all MQTT topics with this NS
-	device    *model.HassDevice
+	Namespace string // prefix all MQTT topics with this NS
+	Device    *model.HassDevice
 }
 
 func NewClient(namespace string, device *model.HassDevice) *HassClient {
 	return &HassClient{
-		namespace: namespace,
-		device:    device,
+		Namespace: namespace,
+		Device:    device,
 	}
 }
 
@@ -31,7 +31,7 @@ func (c *HassClient) defaultMessageHandler(msg mqtt.Message) {
 
 func (c *HassClient) PublishAutoDiscovery(entity model.HassAutoDiscoverable) (mqtt.Token, error) {
 
-	payload := entity.AutoDiscoveryPayload(c.device).WithGlobalTopicPrefix(c.namespace)
+	payload := entity.AutoDiscoveryPayload(c.Device).WithGlobalTopicPrefix(c.Namespace, c.Device, entity)
 
 	json, err := json.Marshal(
 		payload,
@@ -42,17 +42,30 @@ func (c *HassClient) PublishAutoDiscovery(entity model.HassAutoDiscoverable) (mq
 	}
 
 	return c.Publish(MakeMqttMessage(
-		entity.MqttTopic(c.device)+"/config",
+		entity.MqttTopic(c.Device)+"/config",
 		string(json),
 	)), nil
 }
 
 func (c *HassClient) Publish(message MqttMessage) mqtt.Token {
 	return c.client.Publish(
-		c.namespace+"/"+message.topic,
+		c.Namespace+"/"+message.topic,
 		message.qos,
 		message.retain,
 		message.payload,
+	)
+}
+
+func (c *HassClient) Subscribe(topic string, handler MessageHandler) {
+
+	var passHandler = func(client mqtt.Client, message mqtt.Message) {
+		handler(message)
+	}
+
+	c.client.Subscribe(
+		c.Namespace+"/"+topic,
+		2,
+		passHandler,
 	)
 }
 
@@ -67,18 +80,13 @@ func (c *HassClient) Connect(lwt MqttMessage) error {
 		os.Getenv("MQTT_PORT"),
 	)
 
-	var defaultHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		c.defaultMessageHandler(msg)
-	}
-
 	opts := mqtt.NewClientOptions()
 	opts.AddBroker(connectionString)
-	opts.SetWill(c.namespace+"/"+lwt.topic, lwt.payload, lwt.qos, lwt.retain)
+	opts.SetWill(c.Namespace+"/"+lwt.topic, lwt.payload, lwt.qos, lwt.retain)
 	opts.SetClientID(os.Getenv("MQTT_CLIENT_ID"))
 	opts.SetUsername(os.Getenv("MQTT_USERNAME"))
 	opts.SetPassword(os.Getenv("MQTT_PASSWORD"))
 	opts.SetKeepAlive(2 * time.Second)
-	opts.SetDefaultPublishHandler(defaultHandler)
 	opts.SetPingTimeout(1 * time.Second)
 
 	mqttClient := mqtt.NewClient(opts)

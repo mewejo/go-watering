@@ -51,6 +51,8 @@ func (app *App) Run() {
 
 	osExit := app.setupCloseHandler()
 
+	//app.hass.Subscribe("")
+
 	{
 		<-osExit
 		os.Exit(0)

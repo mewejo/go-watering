@@ -16,8 +16,9 @@ type waterOutletHassConfiguration struct {
 	StateOff            string      `json:"state_off"`
 }
 
-func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string) HassAutoDiscoverPayload {
+func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string, device *HassDevice, entity HassAutoDiscoverable) HassAutoDiscoverPayload {
 	c.AvailabilityTopic = prefix + "/" + c.HassDevice.GetFqAvailabilityTopic()
+	c.CommandTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.CommandTopic
 	return c
 }
 
