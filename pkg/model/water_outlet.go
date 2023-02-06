@@ -1,6 +1,10 @@
 package model
 
-import "strconv"
+import (
+	"errors"
+	"strconv"
+	"strings"
+)
 
 type WaterOutlet struct {
 	Id          uint
@@ -26,4 +30,36 @@ func (wo WaterOutlet) MqttTopic(device *HassDevice) string {
 
 func (wo WaterOutlet) AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload {
 	return makeWaterOutletHassConfiguration(wo, device)
+}
+
+func DecodeWaterOutletStateFromString(line string) (uint, bool, bool, error) {
+	// WO:1:0:0 # WO:ID:REAL_STATE:SET_STATE (1 = on, 0 = off)
+	parts := strings.Split(line, ":")
+
+	if parts[0] != "WO" {
+		return 0, false, false, errors.New("line was not a water outlet state")
+	}
+
+	outletId, err := strconv.Atoi(parts[1])
+
+	if err != nil {
+		return 0, false, false, err
+	}
+
+	realState, err := strconv.Atoi(parts[2])
+
+	if err != nil {
+		return 0, false, false, err
+	}
+
+	setState, err := strconv.Atoi(parts[3])
+
+	if err != nil {
+		return 0, false, false, err
+	}
+
+	return uint(outletId),
+		setState == 1,
+		realState == 1,
+		nil
 }

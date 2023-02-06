@@ -2,14 +2,16 @@ package arduino
 
 import (
 	"errors"
-	"log"
 	"strings"
+	"time"
 
 	"go.bug.st/serial"
 )
 
 type Arduino struct {
-	port serial.Port
+	port             serial.Port
+	heartbeatPayload string
+	LastHeartbeat    time.Time
 }
 
 func (a Arduino) SendCommand(command Command) (int, error) {
@@ -42,7 +44,7 @@ func findArduinoPort() (string, error) {
 	return "", errors.New("no devices found which look like an Arduino")
 }
 
-func (a Arduino) ReadLine() string {
+func (a Arduino) ReadLine() (string, error) {
 	buff := make([]byte, 1)
 	data := ""
 
@@ -50,7 +52,7 @@ func (a Arduino) ReadLine() string {
 		n, err := a.ReadData(buff)
 
 		if err != nil {
-			log.Fatal(err)
+			return "", err
 		}
 
 		if n == 0 {
@@ -67,7 +69,7 @@ func (a Arduino) ReadLine() string {
 	data = strings.TrimSuffix(data, "\n")
 	data = strings.TrimSuffix(data, "\r")
 
-	return data
+	return data, nil
 }
 
 func (a *Arduino) ClosePort() error {
@@ -98,5 +100,7 @@ func (a *Arduino) FindAndOpenPort() error {
 
 func NewArduino() *Arduino {
 
-	return &Arduino{}
+	return &Arduino{
+		heartbeatPayload: "HEARTBEAT",
+	}
 }

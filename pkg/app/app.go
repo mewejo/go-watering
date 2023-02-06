@@ -30,6 +30,7 @@ func (app *App) setupCloseHandler() <-chan os.Signal {
 }
 
 func (app *App) Run() {
+
 	app.configureHardware()
 
 	err := app.setupHass()

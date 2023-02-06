@@ -26,7 +26,18 @@ func (app *App) initialiseArduino() (chan bool, <-chan string) {
 
 	go func() {
 		for {
-			dataChan <- app.arduino.ReadLine()
+			select {
+			case <-closeChan:
+				return
+			default:
+				line, err := app.arduino.ReadLine()
+
+				if err != nil {
+					continue
+				}
+
+				dataChan <- line
+			}
 		}
 	}()
 
