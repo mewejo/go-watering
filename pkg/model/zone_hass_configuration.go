@@ -45,7 +45,7 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfigurat
 	c.TargetMoistureStateTopic = "state"
 	c.TargetMoistureTopic = "target_moisture"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
-	c.ModeStateTopic = "{{ value_json.mode.key }}"
+	c.ModeStateTemplate = "{{ value_json.mode.key }}"
 	c.TargetMoistureStateValueTemplate = "{{ value_json.target_moisture.percentage }}"
 	c.StateValueTemplate = "{% if value_json.enabled -%}" + c.StateOn + "{%- else -%}" + c.StateOff + "{%- endif %}"
 	c.PayloadAvailable = device.PayloadAvailable
