@@ -1,5 +1,7 @@
 package model
 
+import "github.com/mewejo/go-watering/pkg/constants"
+
 type zoneHassConfiguration struct {
 	Name                string      `json:"name"`
 	ObjectId            string      `json:"object_id"`
@@ -29,13 +31,13 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) HassAutoDiscoverPa
 	c.StateTopic = "humidifier"
 	c.TargetMoistureTopic = "target_moisture"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
-	c.StateValueTemplate = "{{ value_json.target }}"
+	c.StateValueTemplate = "{{ value_json.target }}" // TODO
 	c.PayloadAvailable = device.PayloadAvailable
 	c.PayloadNotAvailable = device.PayloadNotAvailable
 	c.HassDevice = device
 	c.CommandTopic = "command"
-	c.StateOn = "on"
-	c.StateOff = "off"
+	c.StateOn = constants.HASS_STATE_ON
+	c.StateOff = constants.HASS_STATE_OFF
 
 	return c
 }
