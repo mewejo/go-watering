@@ -34,7 +34,8 @@ func (app *App) listenForWaterOutletCommands() {
 }
 
 func (app *App) listenForZoneCommands() {
-	for _, zone := range app.zones {
+
+	subscribe := func(zone *model.Zone) {
 		app.hass.Subscribe(
 			zone.MqttCommandTopic(app.hassDevice),
 			func(message mqtt.Message) {
@@ -45,6 +46,10 @@ func (app *App) listenForZoneCommands() {
 				}
 			},
 		)
+	}
+
+	for _, zone := range app.zones {
+		subscribe(zone)
 	}
 }
 
