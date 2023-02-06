@@ -69,6 +69,22 @@ func (app *App) listenForZoneCommands() {
 				app.sendZoneStateToHass(zone)
 			},
 		)
+
+		app.hass.Subscribe(
+			zone.MqttModeCommandTopic(app.hassDevice),
+			func(message mqtt.Message) {
+				mode, err := model.GetZoneModeFromKey(
+					string(message.Payload()),
+				)
+
+				if err != nil {
+					return
+				}
+
+				zone.Mode = mode
+				app.sendZoneStateToHass(zone)
+			},
+		)
 	}
 
 	for _, zone := range app.zones {

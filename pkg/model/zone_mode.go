@@ -23,7 +23,7 @@ var zoneModes = []*ZoneMode{
 }
 
 func getDefaultZoneMode() *ZoneMode {
-	mode, err := getZoneModeFromKey("normal")
+	mode, err := GetZoneModeFromKey("normal")
 
 	if err != nil {
 		log.Fatal(err)
@@ -32,7 +32,7 @@ func getDefaultZoneMode() *ZoneMode {
 	return mode
 }
 
-func getZoneModeFromKey(key string) (*ZoneMode, error) {
+func GetZoneModeFromKey(key string) (*ZoneMode, error) {
 	for _, mode := range zoneModes {
 		if mode.Key == key {
 			return mode, nil
