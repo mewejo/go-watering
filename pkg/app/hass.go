@@ -9,6 +9,7 @@ import (
 	"github.com/mewejo/go-watering/pkg/constants"
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
+	"github.com/mewejo/go-watering/pkg/persistence"
 )
 
 func (app *App) listenForWaterOutletCommands() {
@@ -43,6 +44,63 @@ func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
 	app.hass.Publish(
 		hass.MakeMqttMessage(
 			outlet.MqttStateTopic(app.hassDevice),
+			string(payload),
+		),
+	)
+
+	return nil
+}
+
+func (app *App) startSendingMoistureSensorReadings() chan bool {
+
+	ticker := time.NewTicker(5 * time.Second)
+
+	quit := make(chan bool)
+
+	sendSensorStates := func() {
+		for _, sensor := range app.moistureSensors {
+			go app.publishMoistureSensorState(sensor)
+		}
+	}
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				go sendSensorStates()
+
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	return quit
+}
+
+func (app *App) publishMoistureSensorState(sensor *model.MoistureSensor) error {
+
+	reading, err := persistence.GetLatestReadingForMoistureSensorId(sensor.Id)
+
+	if err != nil {
+		return err
+	}
+
+	state := model.MoistureSensorHassState{
+		Sensor:  sensor,
+		Reading: reading,
+	}
+
+	payload, err := json.Marshal(state)
+
+	if err != nil {
+		return err
+	}
+
+	app.hass.Publish(
+		hass.MakeMqttMessage(
+			sensor.MqttStateTopic(app.hassDevice),
 			string(payload),
 		),
 	)

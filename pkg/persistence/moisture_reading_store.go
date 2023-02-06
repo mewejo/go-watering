@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"errors"
+
 	"github.com/mewejo/go-watering/pkg/model"
 )
 
@@ -14,6 +16,14 @@ func (s *moistureReadingStore) recordReading(r model.MoistureReading) {
 	limitReadings(&s.readings, 1000)
 }
 
+func (s *moistureReadingStore) getLatest() (*model.MoistureReading, error) {
+	if len(s.readings) < 1 {
+		return &model.MoistureReading{}, errors.New("no readings available")
+	}
+
+	return &s.readings[len(s.readings)-1], nil
+}
+
 func limitReadings(s *[]model.MoistureReading, length int) {
 	if len(*s) <= length {
 		return
@@ -23,6 +33,10 @@ func limitReadings(s *[]model.MoistureReading, length int) {
 }
 
 var moistureReadingStores []moistureReadingStore
+
+func GetLatestReadingForMoistureSensorId(sensorId uint) (*model.MoistureReading, error) {
+	return getOrMakeStore(sensorId).getLatest()
+}
 
 func RecordMoistureReading(sensorId uint, reading model.MoistureReading) {
 	getOrMakeStore(sensorId).recordReading(reading)

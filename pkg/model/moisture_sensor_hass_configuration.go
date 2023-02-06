@@ -19,7 +19,7 @@ func (c moistureSensorHassConfiguration) WithGlobalTopicPrefix(prefix string, de
 	return c
 }
 
-func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevice) HassAutoDiscoverPayload {
+func makeMoistureSensorHassConfiguration(sensor MoistureSensor, device *HassDevice) moistureSensorHassConfiguration {
 	c := moistureSensorHassConfiguration{}
 	c.Name = sensor.Name
 	c.ObjectId = device.EntityPrefix + "sensor-" + sensor.IdAsString()

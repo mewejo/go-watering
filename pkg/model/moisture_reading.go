@@ -8,12 +8,12 @@ import (
 )
 
 type MoistureReading struct {
-	Time          time.Time
+	Time          time.Time `json:"recorded_at"`
 	raw           uint
-	MoistureLevel MoistureLevel
+	MoistureLevel MoistureLevel `json:"percentage"`
 }
 
-func (r *MoistureReading) CalculateMoistureLevelForSensor(sensor MoistureSensor) {
+func (r *MoistureReading) CalculateMoistureLevelForSensor(sensor *MoistureSensor) {
 	r.MoistureLevel = MakeMoistureLevel(
 		sensor.mapRawReadingToPercentage(r.raw),
 	)

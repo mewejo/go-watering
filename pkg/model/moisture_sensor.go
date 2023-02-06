@@ -9,12 +9,16 @@ import (
 type MoistureSensor struct {
 	Id           uint
 	Name         string
-	DryThreshold uint
-	WetThreshold uint
+	DryThreshold uint `json:"dry_threshold"`
+	WetThreshold uint `json:"wet_threshold"`
 }
 
 func (ms MoistureSensor) MqttTopic(device *HassDevice) string {
 	return "sensor/" + device.Namespace + "/sensor-" + ms.IdAsString()
+}
+
+func (ms MoistureSensor) MqttStateTopic(device *HassDevice) string {
+	return ms.MqttTopic(device) + "/" + makeMoistureSensorHassConfiguration(ms, device).StateTopic
 }
 
 func (ms MoistureSensor) AutoDiscoveryPayload(device *HassDevice) HassAutoDiscoverPayload {

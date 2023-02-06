@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -109,6 +110,18 @@ func (app *App) startRequestingMoistureSensorReadings() chan bool {
 	return quit
 }
 
+func (app *App) findMoistureSensorById(id uint) (*model.MoistureSensor, error) {
+	for _, sensor := range app.moistureSensors {
+		if sensor.Id != id {
+			continue
+		}
+
+		return sensor, nil
+	}
+
+	return &model.MoistureSensor{}, errors.New("could not find sensor by ID")
+}
+
 func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 
 	handleHeartbeat := func(hb model.ArduinoHeartbeat) {
@@ -143,7 +156,14 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 		moistureReading, sensorId, err := model.MakeMoistureReadingFromString(line)
 
 		if err == nil {
-			go handleMoistureReading(moistureReading, sensorId)
+
+			sensor, err := app.findMoistureSensorById(sensorId)
+
+			if err != nil {
+				moistureReading.CalculateMoistureLevelForSensor(sensor)
+				go handleMoistureReading(moistureReading, sensorId)
+			}
+
 			continue
 		}
 
