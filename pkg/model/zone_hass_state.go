@@ -3,6 +3,7 @@ package model
 type ZoneHassState struct {
 	Mode            *ZoneMode     `json:"mode"`
 	AverageMoisture MoistureLevel `json:"average_moisture"`
+	TargetMoisture  MoistureLevel `json:"target_moisture"`
 	Enabled         bool          `json:"enabled"`
 }
 

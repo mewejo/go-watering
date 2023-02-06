@@ -4,6 +4,7 @@ type Zone struct {
 	Id              string
 	Name            string
 	Mode            *ZoneMode
+	TargetMoisture  MoistureLevel
 	MoistureSensors []*MoistureSensor
 	WaterOutlets    []*WaterOutlet
 	Enabled         bool
@@ -17,6 +18,7 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 		MoistureSensors: sensors,
 		WaterOutlets:    waterOutlets,
 		Enabled:         true,
+		TargetMoisture:  MakeMoistureLevel(50), // TODO set to zero on boot?
 	}
 }
 
