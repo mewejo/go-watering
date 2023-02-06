@@ -39,6 +39,10 @@ func (zone Zone) MqttCommandTopic(device *HassDevice) string {
 	return zone.MqttTopic(device) + "/" + makeZoneHassConfiguration(zone, device).CommandTopic
 }
 
+func (zone Zone) MqttTargetMoistureCommandTopic(device *HassDevice) string {
+	return zone.MqttTopic(device) + "/" + makeZoneHassConfiguration(zone, device).TargetMoistureCommandTopic
+}
+
 func (zone Zone) MqttStateTopic(device *HassDevice) string {
 	return zone.MqttTopic(device) + "/" + makeZoneHassConfiguration(zone, device).StateTopic
 }

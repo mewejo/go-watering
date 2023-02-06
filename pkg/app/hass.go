@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"os"
+	"strconv"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -49,6 +50,19 @@ func (app *App) listenForZoneCommands() {
 				} else if string(message.Payload()) == constants.HASS_STATE_OFF {
 					zone.Enabled = false
 				}
+			},
+		)
+
+		app.hass.Subscribe(
+			zone.MqttTargetMoistureCommandTopic(app.hassDevice),
+			func(message mqtt.Message) {
+				moisturePercent, err := strconv.Atoi(string(message.Payload()))
+
+				if err != nil {
+					return
+				}
+
+				zone.TargetMoisture = model.MakeMoistureLevel(uint(moisturePercent))
 			},
 		)
 	}

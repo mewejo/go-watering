@@ -15,7 +15,7 @@ type zoneHassConfiguration struct {
 	CommandTopic                     string      `json:"command_topic"`
 	StateOn                          string      `json:"payload_on"`
 	StateOff                         string      `json:"payload_off"`
-	TargetMoistureTopic              string      `json:"target_humidity_command_topic"`
+	TargetMoistureCommandTopic       string      `json:"target_humidity_command_topic"`
 	TargetMoistureStateTopic         string      `json:"target_humidity_state_topic"`
 	TargetMoistureStateValueTemplate string      `json:"target_humidity_state_template"`
 	ModeStateTemplate                string      `json:"mode_state_template"`
@@ -50,7 +50,7 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfigurat
 	c.UniqueId = c.ObjectId
 	c.StateTopic = "state"
 	c.TargetMoistureStateTopic = "state"
-	c.TargetMoistureTopic = "target_moisture"
+	c.TargetMoistureCommandTopic = "target_moisture"
 	c.AvailabilityTopic = device.GetFqAvailabilityTopic()
 	c.ModeStateTemplate = "{{ value_json.mode.key }}"
 	c.TargetMoistureStateValueTemplate = "{{ value_json.target_moisture.percentage }}"
