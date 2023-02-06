@@ -11,7 +11,7 @@ type moistureReadingStore struct {
 
 func (s *moistureReadingStore) recordReading(r model.MoistureReading) {
 	s.readings = append(s.readings, r)
-	limitReadings(&s.readings, 100)
+	limitReadings(&s.readings, 1000)
 }
 
 func limitReadings(s *[]model.MoistureReading, length int) {
@@ -22,14 +22,14 @@ func limitReadings(s *[]model.MoistureReading, length int) {
 	*s = (*s)[len(*s)-length:]
 }
 
-var stores []moistureReadingStore
+var moistureReadingStores []moistureReadingStore
 
-func RecordReading(sensor model.MoistureSensor, reading model.MoistureReading) {
+func RecordMoistureReading(sensor model.MoistureSensor, reading model.MoistureReading) {
 	getOrMakeStore(sensor).recordReading(reading)
 }
 
 func getOrMakeStore(sensor model.MoistureSensor) *moistureReadingStore {
-	for _, store := range stores {
+	for _, store := range moistureReadingStores {
 		if store.sensor == sensor {
 			return &store
 		}
@@ -39,7 +39,7 @@ func getOrMakeStore(sensor model.MoistureSensor) *moistureReadingStore {
 		sensor: sensor,
 	}
 
-	stores = append(stores, store)
+	moistureReadingStores = append(moistureReadingStores, store)
 
 	return &store
 }

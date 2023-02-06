@@ -17,7 +17,7 @@ func (app *App) markHassNotAvailable() {
 	).Wait()
 }
 
-func (app *App) startAvailabilityTimer() chan bool {
+func (app *App) startHassAvailabilityTimer() chan bool {
 	ticker := time.NewTicker(5 * time.Second)
 
 	quit := make(chan bool)

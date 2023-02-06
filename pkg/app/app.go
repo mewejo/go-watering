@@ -47,7 +47,7 @@ func (app *App) Run() {
 		panic(err)
 	}
 
-	app.startAvailabilityTimer()
+	app.startHassAvailabilityTimer()
 
 	osExit := app.setupCloseHandler()
 
