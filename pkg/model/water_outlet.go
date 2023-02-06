@@ -30,6 +30,10 @@ func (wo WaterOutlet) MqttTopic(device *HassDevice) string {
 	return "switch/" + device.Namespace + "/outlet-" + wo.IdAsString()
 }
 
+func (wo WaterOutlet) OverriddenMqttStateTopic(device *HassDevice) string {
+	return ""
+}
+
 func (wo WaterOutlet) MqttStateTopic(device *HassDevice) string {
 	return wo.MqttTopic(device) + "/" + makeWaterOutletHassConfiguration(wo, device).StateTopic
 }

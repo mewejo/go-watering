@@ -31,6 +31,13 @@ func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *Hass
 	c.ModeStateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.ModeStateTopic
 	c.StateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.StateTopic
 	c.TargetMoistureStateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.TargetMoistureStateTopic
+
+	stateOverride := entity.OverriddenMqttStateTopic(device)
+
+	if stateOverride != "" {
+		c.StateTopic = prefix + "/" + stateOverride
+	}
+
 	return c
 }
 

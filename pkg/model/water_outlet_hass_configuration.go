@@ -22,6 +22,13 @@ func (c waterOutletHassConfiguration) WithGlobalTopicPrefix(prefix string, devic
 	c.AvailabilityTopic = prefix + "/" + c.HassDevice.GetFqAvailabilityTopic()
 	c.CommandTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.CommandTopic
 	c.StateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.StateTopic
+
+	stateOverride := entity.OverriddenMqttStateTopic(device)
+
+	if stateOverride != "" {
+		c.StateTopic = prefix + "/" + stateOverride
+	}
+
 	return c
 }
 

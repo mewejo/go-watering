@@ -17,6 +17,10 @@ func (ms MoistureSensor) MqttTopic(device *HassDevice) string {
 	return "sensor/" + device.Namespace + "/sensor-" + ms.IdAsString()
 }
 
+func (ms MoistureSensor) OverriddenMqttStateTopic(device *HassDevice) string {
+	return ""
+}
+
 func (ms MoistureSensor) MqttStateTopic(device *HassDevice) string {
 	return ms.MqttTopic(device) + "/" + makeMoistureSensorHassConfiguration(ms, device).StateTopic
 }

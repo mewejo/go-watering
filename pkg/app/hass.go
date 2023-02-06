@@ -251,5 +251,15 @@ func (app *App) publishHassAutoDiscovery() error {
 		token.Wait()
 	}
 
+	for _, entity := range app.zones {
+		token, err := app.hass.PublishAutoDiscovery(entity.AverageMoistureSensor)
+
+		if err != nil {
+			return err
+		}
+
+		token.Wait()
+	}
+
 	return nil
 }
