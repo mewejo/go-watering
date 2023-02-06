@@ -3,11 +3,13 @@ package model
 type ZoneHassState struct {
 	Mode            *ZoneMode     `json:"mode"`
 	AverageMoisture MoistureLevel `json:"average_moisture"`
+	Enabled         bool          `json:"enabled"`
 }
 
-func MakeZoneHassState(mode *ZoneMode, averageMoisture MoistureLevel) ZoneHassState {
+func MakeZoneHassState(zone *Zone, averageMoisture MoistureLevel) ZoneHassState {
 	return ZoneHassState{
-		Mode:            mode,
+		Mode:            zone.Mode,
 		AverageMoisture: averageMoisture,
+		Enabled:         zone.Enabled,
 	}
 }

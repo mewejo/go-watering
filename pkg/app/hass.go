@@ -60,7 +60,7 @@ func (app *App) sendZoneStateToHas(zone *model.Zone) error {
 	}
 
 	state := model.MakeZoneHassState(
-		zone.Mode,
+		zone,
 		average,
 	)
 
