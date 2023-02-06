@@ -21,17 +21,17 @@ var zoneModes = []*ZoneMode{
 
 	{
 		Key:            "15 Minute Boost",
-		CutOffDuration: time.Second * 5,
+		CutOffDuration: time.Minute * 15,
 	},
 
 	{
 		Key:            "30 Minute Boost",
-		CutOffDuration: time.Second * 10,
+		CutOffDuration: time.Minute * 30,
 	},
 
 	{
 		Key:            "1 hour Boost",
-		CutOffDuration: time.Second * 15,
+		CutOffDuration: time.Hour,
 	},
 }
 
