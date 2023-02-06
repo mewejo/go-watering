@@ -26,6 +26,7 @@ func (app *App) listenForWaterOutletCommands() {
 				}
 
 				app.arduino.SetWaterOutletState(outlet)
+				app.sendWaterOutletStateToHass(outlet)
 			},
 		)
 	}
@@ -50,6 +51,8 @@ func (app *App) listenForZoneCommands() {
 				} else if string(message.Payload()) == constants.HASS_STATE_OFF {
 					zone.Enabled = false
 				}
+
+				app.sendZoneStateToHass(zone)
 			},
 		)
 
@@ -63,6 +66,7 @@ func (app *App) listenForZoneCommands() {
 				}
 
 				zone.TargetMoisture = model.MakeMoistureLevel(uint(moisturePercent))
+				app.sendZoneStateToHass(zone)
 			},
 		)
 	}
@@ -72,7 +76,7 @@ func (app *App) listenForZoneCommands() {
 	}
 }
 
-func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
+func (app *App) sendWaterOutletStateToHass(outlet *model.WaterOutlet) error {
 
 	payload, err := json.Marshal(outlet)
 
@@ -90,7 +94,7 @@ func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
 	return nil
 }
 
-func (app *App) sendZoneStateToHas(zone *model.Zone) error {
+func (app *App) sendZoneStateToHass(zone *model.Zone) error {
 
 	average, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
 
@@ -130,7 +134,7 @@ func (app *App) startSendingZoneStateToHass() chan bool {
 			select {
 			case <-ticker.C:
 				for _, zone := range app.zones {
-					go app.sendZoneStateToHas(zone)
+					go app.sendZoneStateToHass(zone)
 				}
 			case <-quit:
 				ticker.Stop()
