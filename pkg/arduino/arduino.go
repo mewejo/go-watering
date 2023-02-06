@@ -20,22 +20,6 @@ func (a Arduino) ReadData(buffer []byte) (int, error) {
 	return a.port.Read(buffer)
 }
 
-func (a Arduino) ReadLines(until string) []string {
-	lines := []string{}
-
-	for {
-		line := a.ReadLine()
-
-		lines = append(lines, line)
-
-		if strings.Contains(line, until) {
-			break
-		}
-	}
-
-	return lines
-}
-
 func findArduinoPort() (string, error) {
 	ports, err := serial.GetPortsList()
 
@@ -79,6 +63,9 @@ func (a Arduino) ReadLine() string {
 			break
 		}
 	}
+
+	data = strings.TrimSuffix(data, "\n")
+	data = strings.TrimSuffix(data, "\r")
 
 	return data
 }
