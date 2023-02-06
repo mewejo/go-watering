@@ -26,7 +26,6 @@ func (app *App) listenForWaterOutletCommands() {
 				}
 
 				app.arduino.SetWaterOutletState(outlet)
-				app.sendWaterOutletStateToHass(outlet)
 			},
 		)
 	}

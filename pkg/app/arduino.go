@@ -48,7 +48,7 @@ func (app *App) initialiseArduino() (chan bool, <-chan string) {
 }
 
 func (app *App) startSendingWaterStatesToArduino() chan bool {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(250 * time.Millisecond)
 
 	quit := make(chan bool)
 
@@ -70,7 +70,7 @@ func (app *App) startSendingWaterStatesToArduino() chan bool {
 }
 
 func (app *App) startRequestingWaterOutletStates() chan bool {
-	ticker := time.NewTicker(500 * time.Millisecond)
+	ticker := time.NewTicker(250 * time.Millisecond)
 
 	quit := make(chan bool)
 
@@ -90,7 +90,7 @@ func (app *App) startRequestingWaterOutletStates() chan bool {
 }
 
 func (app *App) startRequestingMoistureSensorReadings() chan bool {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(250 * time.Millisecond)
 
 	quit := make(chan bool)
 
