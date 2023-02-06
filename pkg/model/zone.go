@@ -17,13 +17,15 @@ type Zone struct {
 
 func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*WaterOutlet) *Zone {
 	zone := &Zone{
-		Id:              id,
-		Name:            name,
-		Mode:            getDefaultZoneMode(),
-		MoistureSensors: sensors,
-		WaterOutlets:    waterOutlets,
-		Enabled:         false,
-		TargetMoisture:  MakeMoistureLevel(0),
+		Id:                         id,
+		Name:                       name,
+		Mode:                       getDefaultZoneMode(),
+		MoistureSensors:            sensors,
+		WaterOutlets:               waterOutlets,
+		Enabled:                    false,
+		TargetMoisture:             MakeMoistureLevel(0),
+		WaterOutletsState:          false,
+		WaterOutletsStateChangedAt: time.Now(),
 	}
 
 	zone.AverageMoistureSensor = newZoneAverageMoistureSensor(zone)
@@ -32,8 +34,14 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 }
 
 func (zone *Zone) SetWaterOutletsState(state bool) {
+
+	changing := zone.WaterOutletsState != state
+
 	zone.WaterOutletsState = state
-	zone.WaterOutletsStateChangedAt = time.Now()
+
+	if changing {
+		zone.WaterOutletsStateChangedAt = time.Now()
+	}
 }
 
 func (zone Zone) MqttTopic(device *HassDevice) string {
