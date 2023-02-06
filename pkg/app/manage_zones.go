@@ -50,7 +50,16 @@ func (app *App) preventZoneFlooding(zone *model.Zone) {
 		return
 	}
 
-	cutoff := time.Now().Add(-(time.Second * 3))
+	var cutoffDuration time.Duration
+
+	if zone.Mode.Key == "boost" {
+		cutoffDuration = time.Minute * 30
+	} else {
+		// Assume normal mode. Forces a recalculation after the water being on continuously for an hour.
+		cutoffDuration = time.Hour
+	}
+
+	cutoff := time.Now().Add(-cutoffDuration)
 
 	if zone.WaterOutletsStateChangedAt.Before(cutoff) {
 		zone.Mode = model.GetDefaultZoneMode()
