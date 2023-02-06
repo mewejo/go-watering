@@ -88,15 +88,15 @@ func (app *App) startSendingMoistureSensorReadings() chan bool {
 
 func (app *App) publishMoistureSensorState(sensor *model.MoistureSensor) error {
 
-	reading, err := persistence.GetLatestReadingForMoistureSensorId(sensor.Id)
+	moistureLevel, err := persistence.GetAverageReadingForSince(sensor.Id, 2*time.Minute)
 
 	if err != nil {
 		return err
 	}
 
 	state := model.MoistureSensorHassState{
-		Sensor:  sensor,
-		Reading: reading,
+		Sensor:        sensor,
+		MoistureLevel: moistureLevel,
 	}
 
 	payload, err := json.Marshal(state)

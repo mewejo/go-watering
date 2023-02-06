@@ -1,6 +1,6 @@
 package model
 
 type MoistureSensorHassState struct {
-	Sensor  *MoistureSensor  `json:"sensor"`
-	Reading *MoistureReading `json:"reading"`
+	Sensor        *MoistureSensor `json:"sensor"`
+	MoistureLevel *MoistureLevel  `json:"moisture_level"`
 }
