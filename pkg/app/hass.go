@@ -33,6 +33,21 @@ func (app *App) listenForWaterOutletCommands() {
 	}
 }
 
+func (app *App) listenForZoneCommands() {
+	for _, zone := range app.zones {
+		app.hass.Subscribe(
+			zone.MqttCommandTopic(app.hassDevice),
+			func(message mqtt.Message) {
+				if string(message.Payload()) == constants.HASS_STATE_ON {
+					zone.Enabled = true
+				} else if string(message.Payload()) == constants.HASS_STATE_OFF {
+					zone.Enabled = false
+				}
+			},
+		)
+	}
+}
+
 func (app *App) publishWaterOutletState(outlet *model.WaterOutlet) error {
 
 	payload, err := json.Marshal(outlet)

@@ -35,6 +35,10 @@ func (zone Zone) OverriddenMqttStateTopic(device *HassDevice) string {
 	return ""
 }
 
+func (zone Zone) MqttCommandTopic(device *HassDevice) string {
+	return zone.MqttTopic(device) + "/" + makeZoneHassConfiguration(zone, device).CommandTopic
+}
+
 func (zone Zone) MqttStateTopic(device *HassDevice) string {
 	return zone.MqttTopic(device) + "/" + makeZoneHassConfiguration(zone, device).StateTopic
 }
