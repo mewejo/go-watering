@@ -12,5 +12,6 @@ func MakeZoneHassState(zone *Zone, averageMoisture MoistureLevel) ZoneHassState 
 		Mode:            zone.Mode,
 		AverageMoisture: averageMoisture,
 		Enabled:         zone.Enabled,
+		TargetMoisture:  zone.TargetMoisture,
 	}
 }
