@@ -1,15 +1,18 @@
 package model
 
+import "time"
+
 type Zone struct {
-	Id                    string
-	Name                  string
-	Mode                  *ZoneMode
-	TargetMoisture        MoistureLevel
-	MoistureSensors       []*MoistureSensor
-	WaterOutlets          []*WaterOutlet
-	Enabled               bool
-	AverageMoistureSensor *ZoneAverageMoistureSensor
-	WaterOutletsOpen      bool
+	Id                         string
+	Name                       string
+	Mode                       *ZoneMode
+	TargetMoisture             MoistureLevel
+	MoistureSensors            []*MoistureSensor
+	WaterOutlets               []*WaterOutlet
+	Enabled                    bool
+	AverageMoistureSensor      *ZoneAverageMoistureSensor
+	WaterOutletsState          bool
+	WaterOutletsStateChangedAt time.Time
 }
 
 func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*WaterOutlet) *Zone {
@@ -26,6 +29,11 @@ func NewZone(id string, name string, sensors []*MoistureSensor, waterOutlets []*
 	zone.AverageMoistureSensor = newZoneAverageMoistureSensor(zone)
 
 	return zone
+}
+
+func (zone *Zone) SetWaterOutletsState(state bool) {
+	zone.WaterOutletsState = state
+	zone.WaterOutletsStateChangedAt = time.Now()
 }
 
 func (zone Zone) MqttTopic(device *HassDevice) string {

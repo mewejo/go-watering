@@ -35,13 +35,13 @@ func (app *App) regulateZones() chan bool {
 
 func (app *App) ensureZoneWaterOutletState(zone *model.Zone) {
 	for _, outlet := range zone.WaterOutlets {
-		outlet.TargetState = zone.WaterOutletsOpen
+		outlet.TargetState = zone.WaterOutletsState
 	}
 }
 
 func (app *App) regulateZone(zone *model.Zone) error {
 	if !zone.Enabled {
-		zone.WaterOutletsOpen = false
+		zone.SetWaterOutletsState(false)
 		return nil
 	}
 
