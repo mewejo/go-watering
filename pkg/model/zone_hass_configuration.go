@@ -26,6 +26,7 @@ func (c zoneHassConfiguration) WithGlobalTopicPrefix(prefix string, device *Hass
 	c.CommandTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.CommandTopic
 	c.ModeCommandTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.ModeCommandTopic
 	c.ModeStateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.ModeStateTopic
+	c.StateTopic = prefix + "/" + entity.MqttTopic(device) + "/" + c.StateTopic
 	return c
 }
 
