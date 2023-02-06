@@ -27,6 +27,7 @@ func (app *App) monitorArduinoHeartbeat() (<-chan bool, chan bool) {
 				cutOff := time.Now().Add(-time.Millisecond)
 
 				if app.arduino.LastHeartbeat.Time.Before(cutOff) {
+					log.Println("dead")
 					deadArduino <- true
 					return
 				}
