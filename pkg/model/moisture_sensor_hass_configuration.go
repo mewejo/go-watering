@@ -7,7 +7,7 @@ type moistureSensorHassConfiguration struct {
 	UniqueId            string      `json:"unique_id"`
 	StateTopic          string      `json:"state_topic"`
 	StateValueTemplate  string      `json:"value_template"`
-	AvailabilityTopic   string      `json:"availability_topic"` // TODO this can be set on construct..?
+	AvailabilityTopic   string      `json:"availability_topic"`
 	UnitOfMeasurement   string      `json:"unit_of_measurement"`
 	HassDevice          *HassDevice `json:"device"`
 	PayloadAvailable    string      `json:"payload_available"`
