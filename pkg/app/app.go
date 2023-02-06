@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/mewejo/go-watering/pkg/arduino"
 	"github.com/mewejo/go-watering/pkg/hass"
 	"github.com/mewejo/go-watering/pkg/model"
 )
@@ -17,21 +18,15 @@ type App struct {
 	moistureSensors []*model.MoistureSensor
 	hass            *hass.HassClient
 	hassDevice      *model.HassDevice
+	arduino         *arduino.Arduino
 }
 
-func (app *App) setupCloseHandler() chan bool {
-	exitChan := make(chan bool)
+func (app *App) setupCloseHandler() <-chan os.Signal {
 	sigChan := make(chan os.Signal)
 
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	go func() {
-		<-sigChan
-		app.markHassNotAvailable()
-		exitChan <- true
-	}()
-
-	return exitChan
+	return sigChan
 }
 
 func (app *App) Run() {
@@ -53,12 +48,18 @@ func (app *App) Run() {
 
 	osExit := app.setupCloseHandler()
 
+	closeArduinoChan, arduinoInputChan := app.initialiseArduino()
+
+	go app.handleArduinoDataInput(arduinoInputChan)
+
 	app.hass.Subscribe("switch/vegetable-soaker/outlet-4/command", func(m mqtt.Message) {
 		fmt.Println(string(m.Payload()))
 	})
 
 	{
 		<-osExit
+		app.markHassNotAvailable()
+		close(closeArduinoChan)
 		os.Exit(0)
 	}
 

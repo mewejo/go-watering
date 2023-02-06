@@ -40,11 +40,11 @@ func findArduinoPort() (string, error) {
 	ports, err := serial.GetPortsList()
 
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	if len(ports) == 0 {
-		log.Fatal("no serial ports found!")
+		return "", errors.New("no serial ports found!")
 	}
 
 	for _, port := range ports {
