@@ -30,7 +30,7 @@ func RecordMoistureReading(sensor model.MoistureSensor, reading model.MoistureRe
 
 func getOrMakeStore(sensor model.MoistureSensor) *moistureReadingStore {
 	for _, store := range moistureReadingStores {
-		if store.sensor == sensor {
+		if store.sensor.Id == sensor.Id {
 			return &store
 		}
 	}
