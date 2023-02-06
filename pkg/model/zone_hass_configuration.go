@@ -53,7 +53,7 @@ func makeZoneHassConfiguration(zone Zone, device *HassDevice) zoneHassConfigurat
 	c.HassDevice = device
 	c.CommandTopic = "command"
 	c.ModeCommandTopic = "mode_command"
-	c.ModeStateTopic = "mode"
+	c.ModeStateTopic = "state"
 
 	for _, mode := range zoneModes {
 		c.Modes = append(c.Modes, mode.Key)
