@@ -157,6 +157,8 @@ func (app *App) handleArduinoDataInput(dataChan <-chan string) {
 
 		if err == nil {
 
+			go handleMoistureReading(moistureReading, sensorId)
+
 			sensor, err := app.findMoistureSensorById(sensorId)
 
 			if err != nil {
