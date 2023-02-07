@@ -28,3 +28,4 @@ jobs:
           binary_name: "go-watering"
           ldflags: "-s -w"
           extra_files: LICENSE.md README.md
+          compress_assets: OFF
