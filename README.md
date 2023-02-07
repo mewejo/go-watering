@@ -2,6 +2,8 @@
 
 Exposes the VegSoaker 3000 to Home Assistant (HASS), interfacing with an Arduino running  [Arduino Watering](https://github.com/mewejo/arduino-watering).
 
+This is my first 'proper' Golang application, and no doubt there are many issues with it not following standard practices.
+
 ## Features
 
 * Expose zones to HASS as humidifiers
