@@ -23,12 +23,6 @@ func NewClient(namespace string, device *model.HassDevice) *HassClient {
 	}
 }
 
-func (c *HassClient) defaultMessageHandler(msg mqtt.Message) {
-	// TODO
-	fmt.Printf("TOPIC: %s\n", msg.Topic())
-	fmt.Printf("MSG: %s\n", msg.Payload())
-}
-
 func (c *HassClient) PublishAutoDiscovery(entity model.HassAutoDiscoverable) (mqtt.Token, error) {
 
 	payload := entity.AutoDiscoveryPayload(c.Device).WithGlobalTopicPrefix(c.Namespace, c.Device, entity)
