@@ -47,6 +47,7 @@ func (app *App) ensureZoneWaterOutletState(zone *model.Zone) {
 
 func (app *App) preventZoneFlooding(zone *model.Zone) {
 	if !zone.WaterOutletsState {
+		zone.Mode = model.GetDefaultZoneMode()
 		return
 	}
 
