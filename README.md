@@ -1,6 +1,6 @@
 # Go Watering
 
-Exposes the VegSoaker 3000 to Home Assistant (HASS), interfacing with an Arduino running  [Arduino Watering](../arduino-watering).
+Exposes the VegSoaker 3000 to Home Assistant (HASS), interfacing with an Arduino running  [Arduino Watering](https://github.com/mewejo/arduino-watering).
 
 ## Features
 
