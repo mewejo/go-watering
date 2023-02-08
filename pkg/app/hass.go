@@ -126,7 +126,7 @@ func (app *App) sendZoneModeCommandToHass(zone *model.Zone, mode *model.ZoneMode
 
 func (app *App) sendZoneStateToHass(zone *model.Zone) error {
 
-	average, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
+	average, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, constants.MOISTURE_READINGS_AVERAGE_DURATION)
 
 	if err != nil {
 		return err
@@ -206,7 +206,7 @@ func (app *App) startSendingMoistureSensorReadingsToHass() chan bool {
 
 func (app *App) publishMoistureSensorStateToHass(sensor *model.MoistureSensor) error {
 
-	moistureLevel, err := persistence.GetAverageReadingForSensorIdSince(sensor.Id, 2*time.Minute)
+	moistureLevel, err := persistence.GetAverageReadingForSensorIdSince(sensor.Id, constants.MOISTURE_READINGS_AVERAGE_DURATION)
 
 	if err != nil {
 		return err

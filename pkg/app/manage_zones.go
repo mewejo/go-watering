@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/mewejo/go-watering/pkg/constants"
 	"github.com/mewejo/go-watering/pkg/model"
 	"github.com/mewejo/go-watering/pkg/persistence"
 )
@@ -66,7 +67,7 @@ func (app *App) regulateZone(zone *model.Zone) error {
 	}
 
 	if zone.Mode == model.GetDefaultZoneMode() {
-		averageMoisture, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, 2*time.Minute)
+		averageMoisture, err := persistence.GetAverageReadingForSensorsSince(zone.MoistureSensors, constants.MOISTURE_READINGS_AVERAGE_DURATION)
 
 		if err != nil {
 			return err
