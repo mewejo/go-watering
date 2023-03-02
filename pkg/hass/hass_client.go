@@ -3,6 +3,7 @@ package hass
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -67,6 +68,13 @@ func (c *HassClient) Disconnect() {
 	c.client.Disconnect(500)
 }
 
+func (c *HassClient) handleLostConnection(client mqtt.Client, err error) {
+	log.Fatal(fmt.Sprintf(
+		"MQTT connection lost: %s",
+		err,
+	))
+}
+
 func (c *HassClient) Connect(lwt MqttMessage) error {
 	connectionString := fmt.Sprintf(
 		"tcp://%v:%v",
@@ -82,6 +90,7 @@ func (c *HassClient) Connect(lwt MqttMessage) error {
 	opts.SetPassword(os.Getenv("MQTT_PASSWORD"))
 	opts.SetKeepAlive(2 * time.Second)
 	opts.SetPingTimeout(1 * time.Second)
+	opts.OnConnectionLost = c.handleLostConnection
 
 	mqttClient := mqtt.NewClient(opts)
 
