@@ -77,21 +77,21 @@ func (app *App) configureHardware() {
 	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-1",
 		"Raised Bed #1",
-		[]*model.MoistureSensor{moistureSensor1, moistureSensor2},
+		[]*model.MoistureSensor{moistureSensor3, moistureSensor6},
 		[]*model.WaterOutlet{waterOutlet1},
 	))
 
 	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-2",
 		"Raised Bed #2",
-		[]*model.MoistureSensor{moistureSensor3, moistureSensor4},
+		[]*model.MoistureSensor{moistureSensor2, moistureSensor4},
 		[]*model.WaterOutlet{waterOutlet2},
 	))
 
 	app.zones = append(app.zones, model.NewZone(
 		"raised-bed-3",
 		"Raised Bed #3",
-		[]*model.MoistureSensor{moistureSensor5, moistureSensor6},
+		[]*model.MoistureSensor{moistureSensor1, moistureSensor5},
 		[]*model.WaterOutlet{waterOutlet3},
 	))
 }
